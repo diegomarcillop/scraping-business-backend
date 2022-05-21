@@ -19,11 +19,5 @@ export default registerAs('typeorm', () => {
 
   return {
     user: configDefault,
-    business: configDefault,
-    inventory: configDefault,
-    logistic: configDefault,
-    leads: configDefault,
-    pos: configDefault,
-    utils: configDefault,
   };
 });
