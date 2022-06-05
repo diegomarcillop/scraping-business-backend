@@ -19,5 +19,6 @@ export default registerAs('typeorm', () => {
 
   return {
     user: configDefault,
+    business: configDefault,
   };
 });
