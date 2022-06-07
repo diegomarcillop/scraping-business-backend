@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 
 import { Business } from '../business/business.entity';
+import { State } from '../enums/states.enum';
 
 @Entity('history', { schema: 'search' })
 export class History {
@@ -15,6 +16,9 @@ export class History {
 
   @Column('character varying')
   text: string;
+
+  @Column('enum', { enum: State, default: State.Active })
+  state: State;
 
   @ManyToOne(() => Business, (business) => business.history, {
     onDelete: 'CASCADE',

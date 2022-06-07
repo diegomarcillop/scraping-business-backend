@@ -16,9 +16,11 @@ export class SearchEngineController {
   async loginAdmin(
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
-    const publications = getPublicationsGoogle(
+    let publications = getPublicationsGoogle(
       await this.searchEngineService.search(body),
     );
+
+    publications = publications.filter((item) => item?.type?.name !== 'CITAS');
 
     return {
       success: 'OK',

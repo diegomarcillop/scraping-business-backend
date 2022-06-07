@@ -6,4 +6,10 @@ export class SearchDTO {
 
   @IsString()
   q: string;
+
+  @IsNumber()
+  totalPages: string;
+
+  @IsNumber()
+  page: string;
 }

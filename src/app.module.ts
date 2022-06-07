@@ -24,6 +24,12 @@ import { SearchEngineModule } from './modules/searchEngine/searchEngine.module';
         configService.get('typeorm.user'),
       name: 'user',
     }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        configService.get('typeorm.search'),
+      name: 'search',
+    }),
 
     CacheModule.register({
       useFactory: async (configService: ConfigService) => ({
