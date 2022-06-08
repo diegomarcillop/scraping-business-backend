@@ -1,10 +1,11 @@
 import { getTypePublication } from 'src/@common/utils/getTypePublication';
-import { getYearText } from 'src/@common/utils/getYearText';
+import { getNumberString } from 'src/@common/utils/getNumberString';
 
 export const getPublicationsGoogle = (publications) => {
   return publications.map((item) => ({
     ...item,
-    year: getYearText(item.author),
+    year: getNumberString(item.author, 4),
     type: getTypePublication(item.title),
+    quotes: getNumberString(item.quotes),
   }));
 };

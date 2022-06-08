@@ -11,5 +11,8 @@ export class PublicationDTO {
   author: string;
 
   @IsNumber()
-  year: string;
+  year: number;
+
+  @IsNumber()
+  quotes: number;
 }
