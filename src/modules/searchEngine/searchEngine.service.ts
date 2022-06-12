@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { SearchDTO } from './dto/search.dto';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');
 
 @Injectable()
 export class SearchEngineService {
   //constructor() {}
 
-  async search(body: SearchDTO) {
+  async searchGoogleAcademy(body: SearchDTO) {
     let publications = [];
     let index = 0;
 
@@ -35,7 +36,9 @@ export class SearchEngineService {
           title: publication.querySelector('h3').textContent,
           description: publication.querySelector('.gs_rs').textContent,
           website: publication.querySelector('a').getAttribute('href'),
-          author: publication.querySelector('.gs_a').textContent,
+          authors: publication.querySelector('.gs_a').textContent,
+          quotes:
+            publication.querySelectorAll('.gs_ri .gs_fl a')[2].textContent,
         }));
         return publications;
       });
@@ -44,6 +47,89 @@ export class SearchEngineService {
       await browser.close();
       index++;
     }
+    console.error(publications);
+    return publications;
+  }
+
+  async searchRedalyc(body: SearchDTO) {
+    let publications = [];
+
+    const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
+
+    const browser = await puppeteer.launch({
+      headless: false,
+      args: ['--disable-notifications'],
+    });
+
+    const page = await browser.newPage();
+    await page.goto(URL);
+
+    await page.waitForSelector('#loading', { hidden: true });
+    await page.select('select#pageSize', '100');
+    await page.waitFor(10000);
+
+    let result = [];
+
+    result = await page.evaluate(() => {
+      const elements = Array.from(document.querySelectorAll('.contentcard'));
+      const publications = elements.map((publication) => ({
+        title: publication.querySelector('.ng-binding').textContent,
+        description: publication.querySelector('p .article-contenido')
+          .textContent,
+        year: publication.querySelector('.articulo-hover .ng-binding')
+          .textContent,
+        website: publication
+          .querySelector('.productos-articulo a')
+          .getAttribute('href'),
+        journal: publication.querySelector('.nomRevista-hover .ng-binding')
+          .textContent,
+      }));
+      return publications;
+    });
+
+    await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+
+    await browser.close();
+    publications = result;
+
+    return publications;
+  }
+
+  async searchScielo(body: SearchDTO) {
+    const maxCount = 500;
+    let publications = [];
+
+    const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${body.page}&q=${body.q}&lang=pt`;
+
+    const browser = await puppeteer.launch({
+      headless: false,
+      args: ['--disable-notifications'],
+    });
+
+    const page = await browser.newPage();
+    await page.goto(URL);
+    await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
+    let result = [];
+
+    result = await page.evaluate(() => {
+      const elements = Array.from(document.querySelectorAll('.item'));
+      const publications = elements.map((publication) => ({
+        title: publication.querySelector('.title').textContent,
+        authors: publication.querySelector('.authors').textContent,
+        website: publication.querySelector('.line a').getAttribute('href'),
+        year: publication.querySelectorAll('.source span')[2].textContent,
+        journal: publication.querySelector('.source .dropdown .showTooltip')
+          .textContent,
+      }));
+
+      return publications;
+    });
+
+    await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+
+    console.error(result.length, ' LENGHT');
+    await browser.close();
+    publications = result;
 
     return publications;
   }

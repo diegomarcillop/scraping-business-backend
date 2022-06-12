@@ -16,15 +16,26 @@ export class SearchEngineController {
   async loginAdmin(
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
+    /*let publications = getPublicationsGoogle(
+      await this.searchEngineService.searchGoogleAcademy(body),
+    );
+
+    publications = publications.filter((item) => item?.type?.name !== 'CITAS');
+    const publications = await this.searchEngineService.searchRedalyc(body);
+    const publications = await this.searchEngineService.searchScielo(body);
+    */
     let publications = getPublicationsGoogle(
-      await this.searchEngineService.search(body),
+      await this.searchEngineService.searchGoogleAcademy(body),
     );
 
     publications = publications.filter((item) => item?.type?.name !== 'CITAS');
 
     return {
       success: 'OK',
-      payload: publications,
+      payload: {
+        length: publications.length,
+        publications,
+      },
     };
   }
 }
