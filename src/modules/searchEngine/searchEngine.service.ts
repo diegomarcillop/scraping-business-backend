@@ -16,7 +16,7 @@ export class SearchEngineService {
       const URL = `https://scholar.google.es/scholar?start=${body.page}&q=${body.q}`;
 
       const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: ['--disable-notifications'],
       });
 
@@ -57,7 +57,7 @@ export class SearchEngineService {
     const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
 
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: ['--disable-notifications'],
     });
 
@@ -102,7 +102,7 @@ export class SearchEngineService {
     const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${body.page}&q=${body.q}&lang=pt`;
 
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: ['--disable-notifications'],
     });
 
