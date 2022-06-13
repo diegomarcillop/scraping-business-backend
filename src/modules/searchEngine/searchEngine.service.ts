@@ -3,6 +3,11 @@ import { SearchDTO } from './dto/search.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');
+const args = [
+  '--disable-notifications',
+  '--no-sandbox',
+  '--disable-setuid-sandbox',
+];
 
 @Injectable()
 export class SearchEngineService {
@@ -17,7 +22,7 @@ export class SearchEngineService {
 
       const browser = await puppeteer.launch({
         headless: true,
-        args: ['--disable-notifications', '--no-sandbox'],
+        args,
       });
 
       const page = await browser.newPage();
@@ -58,7 +63,7 @@ export class SearchEngineService {
 
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--disable-notifications', '--no-sandbox'],
+      args,
     });
 
     const page = await browser.newPage();
@@ -103,7 +108,7 @@ export class SearchEngineService {
 
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--disable-notifications', '--no-sandbox'],
+      args,
     });
 
     const page = await browser.newPage();
