@@ -17,7 +17,7 @@ export class SearchEngineService {
 
       const browser = await puppeteer.launch({
         headless: true,
-        args: ['--disable-notifications'],
+        args: ['--disable-notifications', '--no-sandbox'],
       });
 
       const page = await browser.newPage();
@@ -58,7 +58,7 @@ export class SearchEngineService {
 
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--disable-notifications'],
+      args: ['--disable-notifications', '--no-sandbox'],
     });
 
     const page = await browser.newPage();
@@ -103,7 +103,7 @@ export class SearchEngineService {
 
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--disable-notifications'],
+      args: ['--disable-notifications', '--no-sandbox'],
     });
 
     const page = await browser.newPage();
