@@ -1,6 +1,6 @@
 export const getNumberString = (text, length?) => {
   if (text) {
-    const items = text.split(' ');
+    const items = text.replace(',', '').split(' ');
 
     if (length)
       return parseInt(

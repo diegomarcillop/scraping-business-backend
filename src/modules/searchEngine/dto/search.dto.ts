@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class SearchDTO {
   @IsNumber()
@@ -12,4 +12,8 @@ export class SearchDTO {
 
   @IsNumber()
   page: string;
+
+  @IsOptional()
+  @IsNumber()
+  year: number;
 }

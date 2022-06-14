@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import {
   ResponseError,
   ResponseSuccess,
@@ -13,8 +13,8 @@ import { getPublicationsScielo } from './transforms/getPublicationsScielo.transf
 export class SearchEngineController {
   constructor(private readonly searchEngineService: SearchEngineService) {}
 
-  @Get('/search')
-  async loginAdmin(
+  @Post('/search')
+  async search(
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
     /*let publications = getPublicationsGoogle(
@@ -29,12 +29,14 @@ export class SearchEngineController {
 
     publications = getPublicationsGoogle(
       await this.searchEngineService.searchGoogleAcademy(body),
-    );
-    publications = publications.filter((item) => item?.type?.name !== 'CITAS');
+    ).filter((item) => item?.type?.name !== 'CITAS');
 
     publications = publications.concat(
       getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
     );
+
+    if (body.year)
+      publications = publications.filter((item) => item.year === body.year);
 
     return {
       success: 'OK',

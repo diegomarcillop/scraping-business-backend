@@ -1,5 +1,7 @@
-import { getTypePublication } from 'src/@common/utils/getTypePublication';
 import { getNumberString } from 'src/@common/utils/getNumberString';
+import { getTypePublication } from 'src/@common/utils/getTypePublication';
+
+const countWords = require('count-words');
 
 export const getPublicationsGoogle = (publications) => {
   return publications.map((item) => ({
@@ -7,5 +9,6 @@ export const getPublicationsGoogle = (publications) => {
     year: getNumberString(item.year, 4),
     type: getTypePublication(item.title),
     quotes: getNumberString(item.quotes),
+    words: countWords(`${item.description}`),
   }));
 };
