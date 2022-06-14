@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Business } from '../business/business.entity';
+import { User } from '../user/user.entity';
 import { State } from '../enums/states.enum';
 import { Publication } from './publication.entity';
 
@@ -26,12 +26,12 @@ export class Favorite {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => Business, (business) => business.favorites, {
+  @ManyToOne(() => User, (user) => user.favorites, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'fk_business' })
-  business: Business;
+  @JoinColumn({ name: 'fk_user' })
+  user: User;
 
   @ManyToOne(() => Publication, (publication) => publication.favorites, {
     onDelete: 'CASCADE',

@@ -3,14 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { State } from '../enums/states.enum';
-import { Favorite } from '../search/favorite.entity';
-import { History } from '../search/history.entity';
 import { TypeBusiness } from './typeBusiness.entity';
 
 @Entity('business', { schema: 'business' })
@@ -38,10 +35,4 @@ export class Business {
 
   @ManyToOne(() => TypeBusiness, (typeBusiness) => typeBusiness.business)
   typeBusiness: TypeBusiness[];
-
-  @OneToMany(() => History, (interests) => interests.business)
-  history: History[];
-
-  @OneToMany(() => Favorite, (favorite) => favorite.business)
-  favorites: Favorite[];
 }

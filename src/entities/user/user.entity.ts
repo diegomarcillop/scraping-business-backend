@@ -6,10 +6,16 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { Person } from './person.entity';
 import { State } from '../enums/states.enum';
+import { Favorite } from '../search/favorite.entity';
+import { History } from '../search/history.entity';
+import { Rol } from './rol.entity';
 
 @Entity('user', { schema: 'user' })
 @Unique(['email', 'phone'])
@@ -43,4 +49,17 @@ export class User {
 
   @OneToOne(() => Person, (person) => person.user)
   person: Person;
+
+  @OneToMany(() => Favorite, (favorite) => favorite.user)
+  favorites: Favorite[];
+
+  @OneToMany(() => History, (interests) => interests.user)
+  history: History[];
+
+  @ManyToOne(() => Rol, (rol) => rol.users, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'fk_role' })
+  rol: Rol;
 }

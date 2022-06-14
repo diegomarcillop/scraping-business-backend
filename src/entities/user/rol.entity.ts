@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity('rol', { schema: 'user' })
 export class Rol {
@@ -11,9 +12,6 @@ export class Rol {
   @Column('character varying')
   name: string;
 
-  /*   @OneToMany(type => UserRol, userRol => userRol.rol)
-    users: UserRol[];
-  
-    @OneToMany(type => Stakeholder, stakeholder => stakeholder.rol)
-    stakeholder: Stakeholder[]; */
+  @OneToMany(() => User, (user) => user.rol)
+  users: User[];
 }

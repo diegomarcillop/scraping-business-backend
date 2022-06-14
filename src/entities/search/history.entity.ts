@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Business } from '../business/business.entity';
+import { User } from '../user/user.entity';
 import { State } from '../enums/states.enum';
 
 @Entity('history', { schema: 'search' })
@@ -20,10 +20,10 @@ export class History {
   @Column('enum', { enum: State, default: State.Active })
   state: State;
 
-  @ManyToOne(() => Business, (business) => business.history, {
+  @ManyToOne(() => User, (user) => user.history, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'fk_business' })
-  business: Business;
+  @JoinColumn({ name: 'fk_user' })
+  user: User;
 }
