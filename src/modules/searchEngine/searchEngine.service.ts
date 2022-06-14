@@ -42,6 +42,7 @@ export class SearchEngineService {
           description: publication.querySelector('.gs_rs').textContent,
           website: publication.querySelector('a').getAttribute('href'),
           authors: publication.querySelector('.gs_a').textContent,
+          year: publication.querySelector('.gs_a').textContent,
           quotes:
             publication.querySelectorAll('.gs_ri .gs_fl a')[2].textContent,
           origin: 'scholarGoogle',
@@ -102,41 +103,46 @@ export class SearchEngineService {
   }
 
   async searchScielo(body: SearchDTO) {
-    const maxCount = 500;
-    let publications = [];
+    try {
+      const maxCount = 500;
+      let publications = [];
 
-    const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${body.page}&q=${body.q}&lang=pt`;
+      const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${body.page}&q=${body.q}&lang=pt`;
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args,
-    });
+      const browser = await puppeteer.launch({
+        headless: true,
+        args,
+      });
 
-    const page = await browser.newPage();
-    await page.goto(URL);
-    await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
-    let result = [];
+      const page = await browser.newPage();
+      await page.goto(URL);
+      await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
+      let result = [];
 
-    result = await page.evaluate(() => {
-      const elements = Array.from(document.querySelectorAll('.item'));
-      const publications = elements.map((publication) => ({
-        title: publication.querySelector('.title').textContent,
-        authors: publication.querySelector('.authors').textContent,
-        website: publication.querySelector('.line a').getAttribute('href'),
-        year: publication.querySelectorAll('.source span')[2].textContent,
-        origin: 'scielo',
-        journal: publication.querySelector('.source .dropdown .showTooltip')
-          .textContent,
-      }));
+      result = await page.evaluate(() => {
+        const elements = Array.from(document.querySelectorAll('.item'));
+        const publications = elements.map((publication) => ({
+          title: publication.querySelector('.title').textContent,
+          authors: publication.querySelector('.authors').textContent,
+          website: publication.querySelector('.line a').getAttribute('href'),
+          year: publication.querySelectorAll('.source span')[2].textContent,
+          origin: 'scielo',
+          journal: publication.querySelector('.source .dropdown .showTooltip')
+            .textContent,
+        }));
+
+        return publications;
+      });
+
+      await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+
+      await browser.close();
+      publications = result;
 
       return publications;
-    });
-
-    await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
-
-    await browser.close();
-    publications = result;
-
-    return publications;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   }
 }

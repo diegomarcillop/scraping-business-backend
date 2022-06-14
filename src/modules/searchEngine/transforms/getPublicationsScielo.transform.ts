@@ -5,7 +5,7 @@ import { getCleanAuthorsStr } from 'src/@common/utils/getCleanAuthorsStr';
 export const getPublicationsScielo = (publications) => {
   return publications.map((item) => ({
     ...item,
-    year: getNumberString(item.author, 4),
+    year: getNumberString(item.year, 4),
     type: getTypePublication(item.title),
     quotes: getNumberString(item.quotes),
     authors: getCleanAuthorsStr(item.authors),
