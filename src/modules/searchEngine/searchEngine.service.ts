@@ -44,6 +44,7 @@ export class SearchEngineService {
           authors: publication.querySelector('.gs_a').textContent,
           quotes:
             publication.querySelectorAll('.gs_ri .gs_fl a')[2].textContent,
+          origin: 'scholarGoogle',
         }));
         return publications;
       });
@@ -52,7 +53,6 @@ export class SearchEngineService {
       await browser.close();
       index++;
     }
-    console.error(publications);
     return publications;
   }
 
@@ -88,6 +88,7 @@ export class SearchEngineService {
           .getAttribute('href'),
         journal: publication.querySelector('.nomRevista-hover .ng-binding')
           .textContent,
+        origin: 'redalyc',
       }));
       return publications;
     });
@@ -123,6 +124,7 @@ export class SearchEngineService {
         authors: publication.querySelector('.authors').textContent,
         website: publication.querySelector('.line a').getAttribute('href'),
         year: publication.querySelectorAll('.source span')[2].textContent,
+        origin: 'scielo',
         journal: publication.querySelector('.source .dropdown .showTooltip')
           .textContent,
       }));
@@ -132,7 +134,6 @@ export class SearchEngineService {
 
     await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
 
-    console.error(result.length, ' LENGHT');
     await browser.close();
     publications = result;
 

@@ -7,6 +7,7 @@ import {
 import { SearchDTO } from './dto/search.dto';
 import { SearchEngineService } from './searchEngine.service';
 import { getPublicationsGoogle } from './transforms/getPublicationsGoogle.transform';
+import { getPublicationsScielo } from './transforms/getPublicationsScielo.transform';
 
 @Controller('search-engine')
 export class SearchEngineController {
@@ -24,11 +25,16 @@ export class SearchEngineController {
     const publications = await this.searchEngineService.searchRedalyc(body);
     const publications = await this.searchEngineService.searchScielo(body);
     */
-    let publications = getPublicationsGoogle(
+    let publications = [];
+
+    publications = getPublicationsGoogle(
       await this.searchEngineService.searchGoogleAcademy(body),
     );
-
     publications = publications.filter((item) => item?.type?.name !== 'CITAS');
+
+    publications = publications.concat(
+      getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
+    );
 
     return {
       success: 'OK',
