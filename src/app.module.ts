@@ -9,7 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 
 import appConfig from './@common/config/app.config';
 import typeormConfig from './@common/config/typeorm.config';
-import { SearchEngineModule } from './modules/searchEngine/searchEngine.module';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
   imports: [
@@ -40,7 +40,7 @@ import { SearchEngineModule } from './modules/searchEngine/searchEngine.module';
     }),
     CommonModule,
     AuthModule,
-    SearchEngineModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

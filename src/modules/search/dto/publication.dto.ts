@@ -8,7 +8,7 @@ export class PublicationDTO {
   description: string;
 
   @IsString()
-  author: string;
+  authors: string;
 
   @IsNumber()
   year: number;

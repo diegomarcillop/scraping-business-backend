@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SearchDTO } from './dto/search.dto';
+import { SearchDTO } from '../dto/search.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');

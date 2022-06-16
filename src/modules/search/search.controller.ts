@@ -1,19 +1,38 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import {
   ResponseError,
   ResponseSuccess,
 } from 'src/@common/interfaces/response';
+import { CreateFavoriteDTO } from './dto/createFavorite.dto';
 
 import { SearchDTO } from './dto/search.dto';
-import { SearchEngineService } from './searchEngine.service';
+import { FavoritesService } from './services/favorites.service';
+import { SearchEngineService } from './services/searchEngine.service';
 import { getPublicationsGoogle } from './transforms/getPublicationsGoogle.transform';
 import { getPublicationsScielo } from './transforms/getPublicationsScielo.transform';
 
-@Controller('search-engine')
-export class SearchEngineController {
-  constructor(private readonly searchEngineService: SearchEngineService) {}
+@Controller('search')
+export class SearchController {
+  constructor(
+    private readonly searchEngineService: SearchEngineService,
+    private readonly favoriteService: FavoritesService,
+  ) {}
 
-  @Post('/search')
+  @Post('/favorite/create')
+  async createFavorite(
+    @Body() body: CreateFavoriteDTO,
+  ): Promise<ResponseSuccess | ResponseError> {
+    const response: any = await this.favoriteService.createFavorite(body);
+
+    if (response?.error) throw new BadRequestException(response);
+
+    return {
+      success: 'OK',
+      payload: response,
+    };
+  }
+
+  @Post('/engine')
   async search(
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {

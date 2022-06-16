@@ -27,6 +27,21 @@ export class Publication {
   @Column('character varying')
   website: string;
 
+  @Column('character varying')
+  authors: string;
+
+  @Column('numeric')
+  quotes: number;
+
+  @Column('numeric')
+  journal: number;
+
+  @Column('character varying')
+  origin: string;
+
+  @Column('numeric')
+  year: number;
+
   @Column('enum', { enum: State, default: State.Active })
   state: State;
 
