@@ -13,6 +13,9 @@ export class TypePublication {
   @Column('character varying')
   nameEnglish: string;
 
+  @Column('character varying')
+  key: string;
+
   @Column('enum', { enum: State, default: State.Active })
   state: State;
 

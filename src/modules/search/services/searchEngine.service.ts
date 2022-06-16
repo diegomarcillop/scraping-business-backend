@@ -40,7 +40,7 @@ export class SearchEngineService {
         const publications = elements.map((publication) => ({
           title: publication.querySelector('h3').textContent,
           description: publication.querySelector('.gs_rs').textContent,
-          website: publication.querySelector('a').getAttribute('href'),
+          siteUrl: publication.querySelector('a').getAttribute('href'),
           authors: publication.querySelector('.gs_a').textContent,
           year: publication.querySelector('.gs_a').textContent,
           quotes:
@@ -84,7 +84,7 @@ export class SearchEngineService {
           .textContent,
         year: publication.querySelector('.articulo-hover .ng-binding')
           .textContent,
-        website: publication
+        siteUrl: publication
           .querySelector('.productos-articulo a')
           .getAttribute('href'),
         journal: publication.querySelector('.nomRevista-hover .ng-binding')
@@ -124,7 +124,7 @@ export class SearchEngineService {
         const publications = elements.map((publication) => ({
           title: publication.querySelector('.title').textContent,
           authors: publication.querySelector('.authors').textContent,
-          website: publication.querySelector('.line a').getAttribute('href'),
+          siteUrl: publication.querySelector('.line a').getAttribute('href'),
           year: publication.querySelectorAll('.source span')[2].textContent,
           origin: 'scielo',
           journal: publication.querySelector('.source .dropdown .showTooltip')

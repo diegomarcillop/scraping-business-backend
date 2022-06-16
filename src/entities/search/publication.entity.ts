@@ -21,25 +21,25 @@ export class Publication {
   @Column('character varying')
   title: string;
 
-  @Column('character varying')
+  @Column('character varying', { nullable: true })
   description: string;
 
   @Column('character varying')
-  website: string;
+  siteUrl: string;
 
-  @Column('character varying')
+  @Column('character varying', { nullable: true })
   authors: string;
 
-  @Column('numeric')
+  @Column('numeric', { nullable: true })
   quotes: number;
 
-  @Column('numeric')
+  @Column('character varying', { nullable: true })
   journal: number;
 
   @Column('character varying')
   origin: string;
 
-  @Column('numeric')
+  @Column('numeric', { nullable: true })
   year: number;
 
   @Column('enum', { enum: State, default: State.Active })
@@ -57,6 +57,7 @@ export class Publication {
   @ManyToOne(() => TypePublication, (type) => type.publications, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn({ name: 'fk_type' })
   type: TypePublication;

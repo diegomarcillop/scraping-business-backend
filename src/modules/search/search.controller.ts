@@ -1,4 +1,12 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ResponseError,
   ResponseSuccess,
@@ -22,7 +30,7 @@ export class SearchController {
   async createFavorite(
     @Body() body: CreateFavoriteDTO,
   ): Promise<ResponseSuccess | ResponseError> {
-    const response: any = await this.favoriteService.createFavorite(body);
+    const response: any = await this.favoriteService.create(body);
 
     if (response?.error) throw new BadRequestException(response);
 
@@ -32,18 +40,30 @@ export class SearchController {
     };
   }
 
+  @Get('/favorite/all')
+  async allFavorities(): Promise<ResponseSuccess | ResponseError> {
+    const response: any = await this.favoriteService.findAll();
+    if (response?.error) throw new BadRequestException(response);
+
+    return {
+      success: 'OK',
+      payload: response,
+    };
+  }
+
+  @Delete('/favorite/delete')
+  async delete(@Query('id') id): Promise<ResponseSuccess | ResponseError> {
+    const response = await this.favoriteService.delete(id);
+
+    if (response?.error) throw new BadRequestException(response);
+
+    return { success: 'OK' };
+  }
+
   @Post('/engine')
   async search(
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
-    /*let publications = getPublicationsGoogle(
-      await this.searchEngineService.searchGoogleAcademy(body),
-    );
-
-    publications = publications.filter((item) => item?.type?.name !== 'CITAS');
-    const publications = await this.searchEngineService.searchRedalyc(body);
-    const publications = await this.searchEngineService.searchScielo(body);
-    */
     let publications = [];
 
     publications = getPublicationsGoogle(

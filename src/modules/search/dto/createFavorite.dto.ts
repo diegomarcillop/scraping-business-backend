@@ -32,4 +32,12 @@ export class CreateFavoriteDTO {
   @IsOptional()
   @IsNumber()
   year: number;
+
+  @IsOptional()
+  @IsNumber()
+  quotes: number;
+
+  @IsOptional()
+  @IsString()
+  typeKey: string;
 }
