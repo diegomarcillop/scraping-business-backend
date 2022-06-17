@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Delete,
   Get,
   Post,
   Query,
@@ -44,7 +43,7 @@ export class FavoriteController {
     };
   }
 
-  @Delete('/delete')
+  @Post('/delete')
   async delete(@Query('id') id): Promise<ResponseSuccess | ResponseError> {
     const response = await this.favoriteService.delete(id);
 
