@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import appConfig from './@common/config/app.config';
 import typeormConfig from './@common/config/typeorm.config';
 import { SearchModule } from './modules/search/search.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { SearchModule } from './modules/search/search.module';
     CommonModule,
     AuthModule,
     SearchModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
