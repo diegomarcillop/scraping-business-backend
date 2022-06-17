@@ -11,6 +11,7 @@ import { Rol } from 'src/entities/user/rol.entity';
 
 import { TypePublicationDatabaseDefault } from 'src/@common/database/typePublication.default';
 import { TypePublication } from 'src/entities/search/typePublication.entity';
+import { RolesDatabaseDefault } from './database/roles.default';
 
 @Global()
 @Module({
@@ -19,7 +20,12 @@ import { TypePublication } from 'src/entities/search/typePublication.entity';
     TypeOrmModule.forFeature([TypePublication], 'search'),
     HttpModule,
   ],
-  providers: [TypePublicationDatabaseDefault, CryptoService, TokenService],
+  providers: [
+    TypePublicationDatabaseDefault,
+    RolesDatabaseDefault,
+    CryptoService,
+    TokenService,
+  ],
   exports: [TokenService, CryptoService],
 })
 export class CommonModule {}

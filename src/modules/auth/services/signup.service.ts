@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ROLES } from 'src/@common/constants/roles.constant';
 import { getManager, Repository } from 'typeorm';
 
 import { Person } from '../../../entities/user/person.entity';
@@ -33,12 +34,17 @@ export class SignUpService {
         detail: 'Ese correo electronico ya está siendo utilizado.',
       };
 
+    const rol = await this.rolRepository.findOne({
+      where: { key: ROLES[0].key },
+    });
+
     await getManager('user').transaction(async (entityManager) => {
       const user = await entityManager.save(
         this.userRepository.create({
           email: body.email,
           phone: body.phone,
           password: body.password,
+          rol,
         }),
       );
 
