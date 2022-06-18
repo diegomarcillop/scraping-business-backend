@@ -52,9 +52,13 @@ export class UserService {
       lastname: body.lastname || user.person.lastname,
       phone: body.phone || user.person.phone,
       document: body.document || user.person.document,
+      email: body.email || user.email,
     };
 
-    await this.userRepository.update(user.id, { phone: objectUpdate.phone });
+    await this.userRepository.update(user.id, {
+      phone: objectUpdate.phone,
+      email: objectUpdate.email,
+    });
     await this.personRepository.update(user.person.id, objectUpdate);
   }
 }

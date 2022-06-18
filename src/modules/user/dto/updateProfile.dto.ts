@@ -19,4 +19,8 @@ export class UpdateProfile {
   @IsOptional()
   @Length(9, 15)
   document: string;
+
+  @IsOptional()
+  @IsString()
+  email: string;
 }
