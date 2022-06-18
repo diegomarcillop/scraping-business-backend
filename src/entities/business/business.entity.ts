@@ -2,13 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { State } from '../enums/states.enum';
-import { TypeBusiness } from './typeBusiness.entity';
 
 @Entity('business', { schema: 'business' })
 export class Business {
@@ -32,7 +30,4 @@ export class Business {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
-
-  @ManyToOne(() => TypeBusiness, (typeBusiness) => typeBusiness.business)
-  typeBusiness: TypeBusiness[];
 }

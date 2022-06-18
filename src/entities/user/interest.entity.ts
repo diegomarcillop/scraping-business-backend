@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { State } from '../enums/states.enum';
-import { InterestTypeBusiness } from './interestTypeBusiness.entity';
+import { InterestCategory } from './interestCategory.entity';
 
 @Entity('interest', { schema: 'business' })
 export class Interest {
@@ -30,9 +30,6 @@ export class Interest {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(
-    () => InterestTypeBusiness,
-    (typeBusiness) => typeBusiness.typeBusiness,
-  )
-  typeBusiness: InterestTypeBusiness[];
+  @OneToMany(() => InterestCategory, (interest) => interest.category)
+  category: InterestCategory[];
 }

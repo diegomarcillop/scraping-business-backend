@@ -10,10 +10,10 @@ import {
 
 import { State } from '../enums/states.enum';
 import { Interest } from './interest.entity';
-import { TypeBusiness } from './typeBusiness.entity';
+import { Category } from './category.entity';
 
-@Entity('interest_type_business', { schema: 'business' })
-export class InterestTypeBusiness {
+@Entity('interest_category', { schema: 'user' })
+export class InterestCategory {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -33,10 +33,10 @@ export class InterestTypeBusiness {
   @JoinColumn({ name: 'fk_interest' })
   interest: Interest;
 
-  @ManyToOne(() => TypeBusiness, (typeBusiness) => typeBusiness.id, {
+  @ManyToOne(() => Category, (category) => category.id, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'fk_type_business' })
-  typeBusiness: TypeBusiness;
+  @JoinColumn({ name: 'fk_category' })
+  category: Category;
 }

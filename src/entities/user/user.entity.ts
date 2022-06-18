@@ -16,6 +16,7 @@ import { State } from '../enums/states.enum';
 import { Favorite } from '../search/favorite.entity';
 import { History } from '../search/history.entity';
 import { Rol } from './rol.entity';
+import { Category } from './category.entity';
 
 @Entity('user', { schema: 'user' })
 @Unique(['email', 'phone'])
@@ -55,6 +56,9 @@ export class User {
 
   @OneToMany(() => History, (interests) => interests.user)
   history: History[];
+
+  @ManyToOne(() => Category, (category) => category.user)
+  category: Category[];
 
   @ManyToOne(() => Rol, (rol) => rol.users, {
     onDelete: 'CASCADE',

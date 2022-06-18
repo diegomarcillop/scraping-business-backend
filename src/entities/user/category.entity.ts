@@ -8,11 +8,11 @@ import {
 } from 'typeorm';
 
 import { State } from '../enums/states.enum';
-import { Business } from './business.entity';
-import { InterestTypeBusiness } from './interestTypeBusiness.entity';
+import { User } from './user.entity';
+import { InterestCategory } from './interestCategory.entity';
 
-@Entity('type_business', { schema: 'business' })
-export class TypeBusiness {
+@Entity('category', { schema: 'user' })
+export class Category {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -31,9 +31,9 @@ export class TypeBusiness {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(() => Business, (store) => store)
-  business: Business[];
+  @OneToMany(() => User, (store) => store.category)
+  user: User[];
 
-  @OneToMany(() => InterestTypeBusiness, (interests) => interests.interest)
-  interests: InterestTypeBusiness[];
+  @OneToMany(() => InterestCategory, (interests) => interests.category)
+  interests: InterestCategory[];
 }

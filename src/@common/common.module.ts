@@ -12,17 +12,20 @@ import { Rol } from 'src/entities/user/rol.entity';
 import { TypePublicationDatabaseDefault } from 'src/@common/database/typePublication.default';
 import { TypePublication } from 'src/entities/search/typePublication.entity';
 import { RolesDatabaseDefault } from './database/roles.default';
+import { CategoryDatabaseDefault } from './database/category.default';
+import { Category } from 'src/entities/user/category.entity';
 
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Person, Rol], 'user'),
+    TypeOrmModule.forFeature([User, Person, Rol, Category], 'user'),
     TypeOrmModule.forFeature([TypePublication], 'search'),
     HttpModule,
   ],
   providers: [
     TypePublicationDatabaseDefault,
     RolesDatabaseDefault,
+    CategoryDatabaseDefault,
     CryptoService,
     TokenService,
   ],
