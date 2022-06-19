@@ -78,6 +78,18 @@ export class UserService {
         detail: 'Tu correo electronico o contraseña no son válidos.',
       };
 
+    const isUser = await this.userRepository.findOne({
+      select: ['id', 'state', 'email'],
+      relations: ['person'],
+      where: { email: body.email, state: 'active' },
+    });
+
+    if (isUser)
+      return {
+        error: 'EMAIL_IN_USE',
+        detail: 'Ese correo electronico ya está siendo utilizado.',
+      };
+
     const objectUpdate = {
       name: body.name || user.person.name,
       lastname: body.lastname || user.person.lastname,
