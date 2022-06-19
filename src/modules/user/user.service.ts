@@ -21,6 +21,7 @@ export class UserService {
       .select(['user.id', 'user.email', 'user.phone'])
       .leftJoinAndSelect('user.person', 'person')
       .leftJoinAndSelect('user.rol', 'rol')
+      .leftJoinAndSelect('user.category', 'category')
       .where("user.state = 'active' AND user.id = :id", { id })
       .getOne();
 
