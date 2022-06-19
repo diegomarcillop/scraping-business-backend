@@ -5,6 +5,9 @@ import { Repository } from 'typeorm';
 import { User } from 'src/entities/user/user.entity';
 import { UpdateProfile } from './dto/updateProfile.dto';
 import { Person } from 'src/entities/user/person.entity';
+import { UpdateBusiness } from './dto/updateBusiness.dto';
+import { Business } from 'src/entities/business/business.entity';
+import { BusinessUser } from 'src/entities/business/businessUser.entity';
 
 @Injectable()
 export class UserService {
@@ -13,6 +16,10 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Person, 'user')
     private readonly personRepository: Repository<Person>,
+    @InjectRepository(Business, 'business')
+    private readonly businessRepository: Repository<Business>,
+    @InjectRepository(BusinessUser, 'business')
+    private readonly businessUserRepository: Repository<BusinessUser>,
   ) {}
 
   async getProfile(id: number) {
@@ -32,6 +39,28 @@ export class UserService {
       };
 
     return user;
+  }
+
+  async getBusiness(id: number) {
+    const user: any = await this.userRepository
+      .createQueryBuilder('user')
+      .where("user.state = 'active' AND user.id = :id", { id })
+      .getOne();
+
+    if (!user)
+      return {
+        error: 'USER_NOT_EXIST',
+        detail: 'Tu correo electronico o contraseña no son válidos.',
+      };
+
+    const businessUser: any = await this.businessUserRepository
+      .createQueryBuilder('businessUser')
+      .leftJoin('businessUser.user', 'user')
+      .leftJoinAndSelect('businessUser.business', 'business')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    return businessUser.business;
   }
 
   async updateProfile(id: number, body: UpdateProfile) {
@@ -62,5 +91,38 @@ export class UserService {
       category: { id: body.categoryId || user.category.id },
     });
     await this.personRepository.update(user.person.id, objectUpdate);
+  }
+
+  async updateBusiness(id: number, body: UpdateBusiness) {
+    const user: any = await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.email', 'user.phone'])
+      .leftJoinAndSelect('user.person', 'person')
+      .leftJoinAndSelect('user.category', 'category')
+      .where("user.state = 'active' AND user.id = :id", { id })
+      .getOne();
+
+    if (!user)
+      return {
+        error: 'USER_NOT_EXIST',
+        detail: 'Tu correo electronico o contraseña no son válidos.',
+      };
+
+    const businessUser: any = await this.businessUserRepository
+      .createQueryBuilder('businessUser')
+      .leftJoin('businessUser.user', 'user')
+      .leftJoinAndSelect('businessUser.business', 'business')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    const objectUpdate = {
+      name: body.name || businessUser.business.name,
+      nit: body.nit || businessUser.business.nit,
+    };
+
+    await this.businessRepository.update(
+      businessUser.business.id,
+      objectUpdate,
+    );
   }
 }
