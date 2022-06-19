@@ -1,4 +1,4 @@
-import { Length, IsString, IsOptional } from 'class-validator';
+import { Length, IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class UpdateProfile {
   @IsString()
@@ -23,4 +23,8 @@ export class UpdateProfile {
   @IsOptional()
   @IsString()
   email: string;
+
+  @IsOptional()
+  @IsNumber()
+  categoryId: number;
 }

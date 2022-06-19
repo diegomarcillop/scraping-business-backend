@@ -39,6 +39,7 @@ export class UserService {
       .createQueryBuilder('user')
       .select(['user.id', 'user.email', 'user.phone'])
       .leftJoinAndSelect('user.person', 'person')
+      .leftJoinAndSelect('user.category', 'category')
       .where("user.state = 'active' AND user.id = :id", { id })
       .getOne();
 
@@ -58,6 +59,7 @@ export class UserService {
     await this.userRepository.update(user.id, {
       phone: objectUpdate.phone,
       email: body.email || user.email,
+      category: { id: body.categoryId || user.category.id },
     });
     await this.personRepository.update(user.person.id, objectUpdate);
   }
