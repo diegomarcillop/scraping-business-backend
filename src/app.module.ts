@@ -32,6 +32,12 @@ import { UtilsModule } from './modules/utils/utils.module';
         configService.get('typeorm.search'),
       name: 'search',
     }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        configService.get('typeorm.business'),
+      name: 'business',
+    }),
 
     CacheModule.register({
       useFactory: async (configService: ConfigService) => ({

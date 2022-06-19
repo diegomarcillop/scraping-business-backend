@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ROLES } from 'src/@common/constants/roles.constant';
+import { Business } from 'src/entities/business/business.entity';
+import { BusinessUser } from 'src/entities/business/businessUser.entity';
+import { Category } from 'src/entities/user/category.entity';
 import { getManager, Repository } from 'typeorm';
 
 import { Person } from '../../../entities/user/person.entity';
@@ -18,6 +21,13 @@ export class SignUpService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Person, 'user')
     private readonly personRepository: Repository<Person>,
+    @InjectRepository(Category, 'user')
+    private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(Business, 'business')
+    private readonly businessRepository: Repository<Business>,
+    @InjectRepository(BusinessUser, 'business')
+    private readonly businessUserRepository: Repository<BusinessUser>,
+
     private readonly tokenService: TokenService,
   ) {}
 
@@ -38,6 +48,10 @@ export class SignUpService {
       where: { key: ROLES[0].key },
     });
 
+    const category = await this.categoryRepository.findOne({
+      where: { id: body.categoryId },
+    });
+
     await getManager('user').transaction(async (entityManager) => {
       const user = await entityManager.save(
         this.userRepository.create({
@@ -45,6 +59,7 @@ export class SignUpService {
           phone: body.phone,
           password: body.password,
           rol,
+          category,
         }),
       );
 
@@ -53,6 +68,20 @@ export class SignUpService {
           name: body.name,
           lastname: body.lastname,
           phone: body.phone,
+          user,
+        }),
+      );
+
+      const business = await entityManager.save(
+        this.businessRepository.create({
+          nit: body.nit,
+          name: body.businessName,
+        }),
+      );
+
+      await entityManager.save(
+        this.businessUserRepository.create({
+          business,
           user,
         }),
       );

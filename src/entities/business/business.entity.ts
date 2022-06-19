@@ -13,7 +13,7 @@ export class Business {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column('character varying')
+  @Column('character varying', { nullable: true })
   name: string;
 
   @Column('character varying', { nullable: true })

@@ -57,8 +57,12 @@ export class User {
   @OneToMany(() => History, (interests) => interests.user)
   history: History[];
 
-  @ManyToOne(() => Category, (category) => category.user)
-  category: Category[];
+  @ManyToOne(() => Category, (category) => category.user, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'fk_category' })
+  category: Category;
 
   @ManyToOne(() => Rol, (rol) => rol.users, {
     onDelete: 'CASCADE',

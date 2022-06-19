@@ -11,11 +11,14 @@ import { Rol } from '../../entities/user/rol.entity';
 import { LoginService } from './services/login.service';
 import { TokenService } from './services/token.service';
 import { SignUpService } from './services/signup.service';
+import { Category } from 'src/entities/user/category.entity';
+import { Business } from 'src/entities/business/business.entity';
+import { BusinessUser } from 'src/entities/business/businessUser.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Person, Rol], 'user'),
-
+    TypeOrmModule.forFeature([User, Person, Rol, Category], 'user'),
+    TypeOrmModule.forFeature([Business, BusinessUser], 'business'),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
