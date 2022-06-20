@@ -14,18 +14,21 @@ import { TypePublication } from 'src/entities/search/typePublication.entity';
 import { RolesDatabaseDefault } from './database/roles.default';
 import { CategoryDatabaseDefault } from './database/category.default';
 import { Category } from 'src/entities/user/category.entity';
+import { Language } from 'src/entities/search/language.entity';
+import { LanguageDatabaseDefault } from './database/language.default';
 
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Person, Rol, Category], 'user'),
-    TypeOrmModule.forFeature([TypePublication], 'search'),
+    TypeOrmModule.forFeature([TypePublication, Language], 'search'),
     HttpModule,
   ],
   providers: [
     TypePublicationDatabaseDefault,
     RolesDatabaseDefault,
     CategoryDatabaseDefault,
+    LanguageDatabaseDefault,
     CryptoService,
     TokenService,
   ],

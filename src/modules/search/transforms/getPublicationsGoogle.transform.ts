@@ -1,7 +1,11 @@
+const LanguageDetect = require('languagedetect');
+
+import { LANGUAGES } from 'src/@common/constants/language.constant';
 import { getNumberString } from 'src/@common/utils/getNumberString';
 import { getTypePublication } from 'src/@common/utils/getTypePublication';
 
 const countWords = require('count-words');
+const lngDetector = new LanguageDetect();
 
 export const getPublicationsGoogle = (publications) => {
   return (
@@ -11,6 +15,9 @@ export const getPublicationsGoogle = (publications) => {
       type: getTypePublication(item.title),
       quotes: getNumberString(item.quotes),
       words: countWords(`${item.description}`),
+      language: LANGUAGES.find(
+        (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
+      ),
     })) || []
   );
 };

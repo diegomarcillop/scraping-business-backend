@@ -28,9 +28,18 @@ export class FilterService {
       {},
     );
 
+    const languages = publications.reduce(
+      (accumulator, value) => ({
+        ...accumulator,
+        [value?.language?.name]: (accumulator[value?.language?.name] || 0) + 1,
+      }),
+      {},
+    );
+
     filters.type = getConvertArrayObject(type);
     filters.journals = getConvertArrayObject(journals);
     filters.years = getConvertArrayObject(years);
+    filters.languages = getConvertArrayObject(languages);
 
     return filters;
   }

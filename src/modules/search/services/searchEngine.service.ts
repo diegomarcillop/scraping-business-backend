@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
+const LanguageDetect = require('languagedetect');
+
 import { SearchDTO } from '../dto/search.dto';
 
 const PAGE_DEFAULT = 1;
 const TOTAL_PAGE_DEFAULT = '10';
+const countWords = require('count-words');
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');
@@ -52,7 +55,7 @@ export class SearchEngineService {
             year: publication.querySelector('.gs_a').textContent,
             quotes:
               publication.querySelectorAll('.gs_ri .gs_fl a')[2].textContent,
-            origin: 'scholarGoogle',
+            origin: 'ScholarGoogle',
           }));
           return publications;
         });
@@ -99,7 +102,7 @@ export class SearchEngineService {
           .getAttribute('href'),
         journal: publication.querySelector('.nomRevista-hover .ng-binding')
           .textContent,
-        origin: 'redalyc',
+        origin: 'Redalyc',
       }));
       return publications;
     });
@@ -138,7 +141,7 @@ export class SearchEngineService {
           authors: publication.querySelector('.authors').textContent,
           siteUrl: publication.querySelector('.line a').getAttribute('href'),
           year: publication.querySelectorAll('.source span')[2].textContent,
-          origin: 'scielo',
+          origin: 'Scielo',
           journal: publication.querySelector('.source .dropdown .showTooltip')
             .textContent,
         }));

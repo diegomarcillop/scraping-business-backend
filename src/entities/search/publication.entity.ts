@@ -11,6 +11,7 @@ import {
 import { State } from '../enums/states.enum';
 
 import { Favorite } from './favorite.entity';
+import { Language } from './language.entity';
 import { TypePublication } from './typePublication.entity';
 
 @Entity('publication', { schema: 'search' })
@@ -61,4 +62,12 @@ export class Publication {
   })
   @JoinColumn({ name: 'fk_type' })
   type: TypePublication;
+
+  @ManyToOne(() => Language, (language) => language.publications, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'fk_language' })
+  language: Language;
 }
