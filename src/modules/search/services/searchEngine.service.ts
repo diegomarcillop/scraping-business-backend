@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { SearchDTO } from '../dto/search.dto';
 
+const PAGE_DEFAULT = 1;
+const TOTAL_PAGE_DEFAULT = '10';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');
 const args = [
@@ -14,47 +17,54 @@ export class SearchEngineService {
   //constructor() {}
 
   async searchGoogleAcademy(body: SearchDTO) {
-    let publications = [];
-    let index = 0;
+    try {
+      let publications = [];
+      let index = 0;
 
-    while (index < parseInt(body.totalPages)) {
-      const URL = `https://scholar.google.es/scholar?start=${body.page}&q=${body.q}`;
+      while (index < parseInt(body.totalPages || TOTAL_PAGE_DEFAULT)) {
+        const URL = `https://scholar.google.es/scholar?start=${
+          body.page || PAGE_DEFAULT
+        }&q=${body.q}`;
 
-      const browser = await puppeteer.launch({
-        headless: true,
-        args,
-      });
+        const browser = await puppeteer.launch({
+          headless: true,
+          args,
+        });
 
-      const page = await browser.newPage();
-      await page.goto(URL);
+        const page = await browser.newPage();
+        await page.goto(URL);
 
-      await page.screenshot({ path: 'screenshot.png' });
-      await page.click('.gs_r.gs_or.gs_scl');
+        await page.screenshot({ path: 'screenshot.png' });
+        await page.click('.gs_r.gs_or.gs_scl');
 
-      let result = [];
+        let result = [];
 
-      result = await page.evaluate(() => {
-        const elements = Array.from(
-          document.querySelectorAll('.gs_r.gs_or.gs_scl'),
-        );
-        const publications = elements.map((publication) => ({
-          title: publication.querySelector('h3').textContent,
-          description: publication.querySelector('.gs_rs').textContent,
-          siteUrl: publication.querySelector('a').getAttribute('href'),
-          authors: publication.querySelector('.gs_a').textContent,
-          year: publication.querySelector('.gs_a').textContent,
-          quotes:
-            publication.querySelectorAll('.gs_ri .gs_fl a')[2].textContent,
-          origin: 'scholarGoogle',
-        }));
-        return publications;
-      });
+        result = await page.evaluate(() => {
+          const elements = Array.from(
+            document.querySelectorAll('.gs_r.gs_or.gs_scl'),
+          );
 
-      publications = [...publications, ...result];
-      await browser.close();
-      index++;
+          const publications = elements?.map((publication) => ({
+            title: publication.querySelector('h3').textContent,
+            description: publication.querySelector('.gs_rs').textContent,
+            siteUrl: publication.querySelector('a').getAttribute('href'),
+            authors: publication.querySelector('.gs_a').textContent,
+            year: publication.querySelector('.gs_a').textContent,
+            quotes:
+              publication.querySelectorAll('.gs_ri .gs_fl a')[2].textContent,
+            origin: 'scholarGoogle',
+          }));
+          return publications;
+        });
+
+        publications = [...publications, ...result];
+        await browser.close();
+        index++;
+      }
+      return publications;
+    } catch (e) {
+      console.error(e);
     }
-    return publications;
   }
 
   async searchRedalyc(body: SearchDTO) {
@@ -107,7 +117,9 @@ export class SearchEngineService {
       const maxCount = 500;
       let publications = [];
 
-      const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${body.page}&q=${body.q}&lang=pt`;
+      const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${
+        body.page || PAGE_DEFAULT
+      }&q=${body.q}&lang=pt`;
 
       const browser = await puppeteer.launch({
         headless: true,

@@ -8,6 +8,7 @@ import { FavoriteController } from './controllers/favorite.controller';
 
 import { SearchEngineController } from './controllers/searchEngine.controller';
 import { FavoritesService } from './services/favorites.service';
+import { FilterService } from './services/filter.service';
 import { SearchEngineService } from './services/searchEngine.service';
 
 @Module({
@@ -19,6 +20,6 @@ import { SearchEngineService } from './services/searchEngine.service';
     TypeOrmModule.forFeature([User], 'user'),
   ],
   controllers: [SearchEngineController, FavoriteController],
-  providers: [SearchEngineService, FavoritesService],
+  providers: [SearchEngineService, FavoritesService, FilterService],
 })
 export class SearchModule {}

@@ -5,13 +5,17 @@ import {
 } from 'src/@common/interfaces/response';
 
 import { SearchDTO } from '../dto/search.dto';
+import { FilterService } from '../services/filter.service';
 import { SearchEngineService } from '../services/searchEngine.service';
 import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsScielo } from '../transforms/getPublicationsScielo.transform';
 
 @Controller('search')
 export class SearchEngineController {
-  constructor(private readonly searchEngineService: SearchEngineService) {}
+  constructor(
+    private readonly searchEngineService: SearchEngineService,
+    private readonly filterService: FilterService,
+  ) {}
 
   @Post('/engine')
   async search(
@@ -30,11 +34,14 @@ export class SearchEngineController {
     if (body.year)
       publications = publications.filter((item) => item.year === body.year);
 
+    const filters = await this.filterService.getFilters(publications);
+
     return {
       success: 'OK',
       payload: {
         length: publications.length,
-        publications,
+        publications: publications,
+        filters,
       },
     };
   }
