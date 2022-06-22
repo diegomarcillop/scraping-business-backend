@@ -83,9 +83,9 @@ export class SearchEngineService {
     const page = await browser.newPage();
     await page.goto(URL);
 
-    await page.waitForSelector('#loading', { hidden: true });
+    await page.waitForSelector('.contentcard');
     await page.select('select#pageSize', '100');
-    await page.waitFor(10000);
+    await page.waitForTimeout(10000);
 
     let result = [];
 

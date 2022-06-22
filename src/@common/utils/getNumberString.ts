@@ -8,9 +8,8 @@ export const getNumberString = (text, length?) => {
         10,
       );
 
-    return parseInt(
-      items.find((item) => !isNaN(item)),
-      10,
-    );
+    const str = items.find((item) => !isNaN(item));
+
+    if (str) return parseInt(str?.slice(0, 4), 10);
   }
 };

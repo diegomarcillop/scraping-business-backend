@@ -8,6 +8,7 @@ import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
 import { SearchEngineService } from '../services/searchEngine.service';
 import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
+import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
 import { getPublicationsScielo } from '../transforms/getPublicationsScielo.transform';
 
 @Controller('search')
@@ -23,12 +24,18 @@ export class SearchEngineController {
   ): Promise<ResponseSuccess | ResponseError> {
     let publications = [];
 
-    publications = getPublicationsGoogle(
+    /*publications = getPublicationsGoogle(
       await this.searchEngineService.searchGoogleAcademy(body),
-    ).filter((item) => item?.type?.name !== 'CITAS');
+    ).filter((item) => item?.type?.name !== 'CITAS');*/
 
     publications = publications.concat(
       getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
+    );
+
+    publications = publications.concat(
+      getPublicationsRedalyc(
+        await this.searchEngineService.searchRedalyc(body),
+      ),
     );
 
     if (body.year)

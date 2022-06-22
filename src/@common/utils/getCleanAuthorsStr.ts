@@ -1,4 +1,4 @@
-export const getCleanAuthorsStr = (str) => {
+export const getCleanStr = (str) => {
   return str
     .replaceAll('\n', '')
     .replaceAll('.', '')
