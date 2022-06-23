@@ -5,7 +5,10 @@ import {
   Get,
   Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ResponseError,
   ResponseSuccess,
@@ -19,6 +22,7 @@ export class FavoriteController {
   constructor(private readonly favoriteService: FavoritesService) {}
 
   @Post('/create')
+  @UseGuards(AuthGuard('jwt'))
   async createFavorite(
     @Body() body: CreateFavoriteDTO,
   ): Promise<ResponseSuccess | ResponseError> {
@@ -33,8 +37,11 @@ export class FavoriteController {
   }
 
   @Get('/all')
-  async allFavorities(): Promise<ResponseSuccess | ResponseError> {
-    const response: any = await this.favoriteService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  async allFavorities(
+    @Request() req,
+  ): Promise<ResponseSuccess | ResponseError> {
+    const response: any = await this.favoriteService.findAll(req.user.id);
     if (response?.error) throw new BadRequestException(response);
 
     return {
@@ -44,6 +51,7 @@ export class FavoriteController {
   }
 
   @Post('/delete')
+  @UseGuards(AuthGuard('jwt'))
   async delete(@Query('id') id): Promise<ResponseSuccess | ResponseError> {
     const response = await this.favoriteService.delete(id);
 

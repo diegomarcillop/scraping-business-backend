@@ -76,13 +76,18 @@ export class FavoritesService {
     return favorite;
   }
 
-  async findAll() {
+  async findAll(id: number) {
     const queryBuilder = await this.favoriteRepository
       .createQueryBuilder('favorite')
       .select(['favorite.id', 'favorite.state', 'favorite.createdAt'])
       .leftJoinAndSelect('favorite.publication', 'publication')
       .leftJoinAndSelect('publication.type', 'type')
-      .where("publication.state = 'active' AND favorite.state = 'active'");
+      .leftJoin('favorite.user', 'user')
+      .where(
+        "publication.state = 'active' AND favorite.state = 'active' AND user.id = :id ",
+        { id },
+      )
+      .orderBy('favorite.id', 'DESC');
 
     const data = await queryBuilder.getMany();
     return data;
