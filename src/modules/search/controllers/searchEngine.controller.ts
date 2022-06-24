@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ResponseError,
   ResponseSuccess,
@@ -6,6 +7,7 @@ import {
 
 import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
+import { HistoryService } from '../services/history.service';
 import { SearchEngineService } from '../services/searchEngine.service';
 import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
@@ -16,13 +18,17 @@ export class SearchEngineController {
   constructor(
     private readonly searchEngineService: SearchEngineService,
     private readonly filterService: FilterService,
+    private readonly historyService: HistoryService,
   ) {}
 
   @Post('/engine')
+  @UseGuards(AuthGuard('jwt'))
   async search(
+    @Request() req,
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
     let publications = [];
+    body.quantity = body.quantity / 2;
 
     /*publications = getPublicationsGoogle(
       await this.searchEngineService.searchGoogleAcademy(body),
@@ -42,6 +48,12 @@ export class SearchEngineController {
       publications = publications.filter((item) => item.year === body.year);
 
     const filters = await this.filterService.getFilters(publications);
+
+    this.historyService.create({
+      text: body.q,
+      userId: req.user.id,
+      quantity: publications.length,
+    });
 
     return {
       success: 'OK',

@@ -3,7 +3,7 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 export class SearchDTO {
   @IsOptional()
   @IsNumber()
-  quantity: string;
+  quantity: number;
 
   @IsString()
   q: string;
@@ -14,7 +14,7 @@ export class SearchDTO {
 
   @IsOptional()
   @IsNumber()
-  page: string;
+  page: number;
 
   @IsOptional()
   @IsNumber()

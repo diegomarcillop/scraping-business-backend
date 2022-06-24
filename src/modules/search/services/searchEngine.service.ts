@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-const LanguageDetect = require('languagedetect');
 
 import { SearchDTO } from '../dto/search.dto';
 
@@ -84,7 +83,7 @@ export class SearchEngineService {
     await page.goto(URL);
 
     await page.waitForSelector('.contentcard');
-    await page.select('select#pageSize', '100');
+    await page.select('select#pageSize', body.quantity.toString());
     await page.waitForTimeout(10000);
 
     let result = [];
@@ -117,10 +116,14 @@ export class SearchEngineService {
 
   async searchScielo(body: SearchDTO) {
     try {
-      const maxCount = 500;
+      const maxCount = 100;
       let publications = [];
 
-      const URL = `https://search.scielo.org/?q=&lang=pt&count=${maxCount}&from=16&output=site&sort=&format=summary&fb=&page=${
+      const URL = `https://search.scielo.org/?q=${body.q}&lang=pt&count=${
+        body.quantity || maxCount
+      }&from=${
+        body.quantity * body.page + 1
+      }&output=site&sort=&format=summary&fb=&page=${
         body.page || PAGE_DEFAULT
       }&q=${body.q}&lang=pt`;
 

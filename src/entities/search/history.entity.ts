@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { User } from '../user/user.entity';
@@ -17,6 +19,9 @@ export class History {
   @Column('character varying')
   text: string;
 
+  @Column('numeric')
+  quantity: number;
+
   @Column('enum', { enum: State, default: State.Active })
   state: State;
 
@@ -26,4 +31,10 @@ export class History {
   })
   @JoinColumn({ name: 'fk_user' })
   user: User;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
 }
