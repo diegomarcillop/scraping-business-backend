@@ -71,7 +71,6 @@ export class SearchEngineService {
 
   async searchRedalyc(body: SearchDTO) {
     let publications = [];
-
     const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
 
     const browser = await puppeteer.launch({
@@ -119,7 +118,6 @@ export class SearchEngineService {
     try {
       const maxCount = 100;
       let publications = [];
-
       const URL = `https://search.scielo.org/?q=${body.q}&lang=pt&count=${
         body.quantity || maxCount
       }&from=${
