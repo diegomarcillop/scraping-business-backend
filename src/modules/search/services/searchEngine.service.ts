@@ -4,7 +4,6 @@ import { SearchDTO } from '../dto/search.dto';
 
 const PAGE_DEFAULT = 1;
 const TOTAL_PAGE_DEFAULT = '10';
-const countWords = require('count-words');
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');
@@ -31,6 +30,7 @@ export class SearchEngineService {
         const browser = await puppeteer.launch({
           headless: true,
           args,
+          ignoreDefaultArgs: ['–disable-extensions'],
         });
 
         const page = await browser.newPage();
@@ -77,6 +77,7 @@ export class SearchEngineService {
     const browser = await puppeteer.launch({
       headless: true,
       args,
+      ignoreDefaultArgs: ['–disable-extensions'],
     });
 
     const page = await browser.newPage();
@@ -130,6 +131,7 @@ export class SearchEngineService {
       const browser = await puppeteer.launch({
         headless: true,
         args,
+        ignoreDefaultArgs: ['–disable-extensions'],
       });
 
       const page = await browser.newPage();
