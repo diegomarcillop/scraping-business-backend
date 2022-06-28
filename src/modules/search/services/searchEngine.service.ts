@@ -30,11 +30,11 @@ export class SearchEngineService {
         const browser = await puppeteer.launch({
           headless: true,
           args,
-          ignoreDefaultArgs: ['–disable-extensions'],
+          //ignoreDefaultArgs: ['–disable-extensions'],
         });
 
         const page = await browser.newPage();
-        await page.goto(URL);
+        await page.goto(URL, { timeout: 0 });
 
         await page.screenshot({ path: 'screenshot.png' });
         await page.click('.gs_r.gs_or.gs_scl');
@@ -76,11 +76,11 @@ export class SearchEngineService {
     const browser = await puppeteer.launch({
       headless: true,
       args,
-      ignoreDefaultArgs: ['–disable-extensions'],
+      //ignoreDefaultArgs: ['–disable-extensions'],
     });
 
     const page = await browser.newPage();
-    await page.goto(URL);
+    await page.goto(URL, { timeout: 0 });
 
     await page.waitForSelector('.contentcard');
     await page.select('select#pageSize', body.quantity.toString());
@@ -129,11 +129,11 @@ export class SearchEngineService {
       const browser = await puppeteer.launch({
         headless: true,
         args,
-        ignoreDefaultArgs: ['–disable-extensions'],
+        //ignoreDefaultArgs: ['–disable-extensions'],
       });
 
       const page = await browser.newPage();
-      await page.goto(URL);
+      await page.goto(URL, { timeout: 0 });
       await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
       let result = [];
 
