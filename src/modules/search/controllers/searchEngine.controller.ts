@@ -9,7 +9,7 @@ import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
 import { HistoryService } from '../services/history.service';
 import { SearchEngineService } from '../services/searchEngine.service';
-import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
+//import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
 import { getPublicationsScielo } from '../transforms/getPublicationsScielo.transform';
 
@@ -28,20 +28,24 @@ export class SearchEngineController {
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
     let publications = [];
+    const quantity = body.quantity;
     body.quantity = body.quantity / 2;
 
     /*publications = getPublicationsGoogle(
       await this.searchEngineService.searchGoogleAcademy(body),
     ).filter((item) => item?.type?.name !== 'CITAS');*/
 
-    publications = publications.concat(
-      getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
-    );
+    if (body.page === 1)
+      publications = publications.concat(
+        getPublicationsRedalyc(
+          await this.searchEngineService.searchRedalyc(body),
+        ),
+      );
+
+    if (publications.length === 0) body.quantity = quantity;
 
     publications = publications.concat(
-      getPublicationsRedalyc(
-        await this.searchEngineService.searchRedalyc(body),
-      ),
+      getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
     );
 
     if (body.year)
