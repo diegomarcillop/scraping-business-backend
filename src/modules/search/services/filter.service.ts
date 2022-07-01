@@ -36,10 +36,19 @@ export class FilterService {
       {},
     );
 
+    const origins = publications.reduce(
+      (accumulator, value) => ({
+        ...accumulator,
+        [value?.origin]: (accumulator[value?.origin] || 0) + 1,
+      }),
+      {},
+    );
+
     filters.type = getConvertArrayObject(type);
     filters.journals = getConvertArrayObject(journals);
     filters.years = getConvertArrayObject(years);
     filters.languages = getConvertArrayObject(languages);
+    filters.origins = getConvertArrayObject(origins);
 
     return filters;
   }
