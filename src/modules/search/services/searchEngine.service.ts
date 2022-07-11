@@ -65,7 +65,7 @@ export class SearchEngineService {
       }
       return publications;
     } catch (e) {
-      console.error(e);
+      console.error('SholarGoogle', e);
     }
   }
 
@@ -116,15 +116,18 @@ export class SearchEngineService {
 
   async searchScielo(body: SearchDTO) {
     try {
+      body.q = body.q.split(' ').join('+');
       const maxCount = 100;
       let publications = [];
       const URL = `https://search.scielo.org/?q=${body.q}&lang=pt&count=${
         body.quantity || maxCount
       }&from=${
-        body.quantity * body.page + 1
+        body.quantity * (body.page - 1) + 1
       }&output=site&sort=&format=summary&fb=&page=${
         body.page || PAGE_DEFAULT
       }&q=${body.q}&lang=pt`;
+
+      console.error(URL);
 
       const browser = await puppeteer.launch({
         headless: true,
@@ -140,26 +143,29 @@ export class SearchEngineService {
       result = await page.evaluate(() => {
         const elements = Array.from(document.querySelectorAll('.item'));
         const publications = elements.map((publication) => ({
-          title: publication.querySelector('.title').textContent,
-          authors: publication.querySelector('.authors').textContent,
+          title: publication.querySelector('.title')?.textContent,
+          authors: publication.querySelector('.authors')?.textContent,
           siteUrl: publication.querySelector('.line a').getAttribute('href'),
-          year: publication.querySelectorAll('.source span')[2].textContent,
+          year: publication.querySelectorAll('.source span')[2]?.textContent,
           origin: 'Scielo',
           journal: publication.querySelector('.source .dropdown .showTooltip')
-            .textContent,
+            ?.textContent,
         }));
 
         return publications;
       });
 
-      await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+      await page.screenshot({
+        path: 'screenshot_sicelo_2.png',
+        fullPage: true,
+      });
 
       await browser.close();
       publications = result;
 
       return publications;
     } catch (e) {
-      console.error(e);
+      console.error('Scielo ', e);
       return [];
     }
   }
