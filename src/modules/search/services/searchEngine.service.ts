@@ -106,7 +106,7 @@ export class SearchEngineService {
       return publications;
     });
 
-    await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+    //await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
 
     await browser.close();
     publications = result;
@@ -137,7 +137,7 @@ export class SearchEngineService {
 
       const page = await browser.newPage();
       await page.goto(URL, { timeout: 0 });
-      await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
+      //await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
       let result = [];
 
       result = await page.evaluate(() => {
@@ -155,10 +155,10 @@ export class SearchEngineService {
         return publications;
       });
 
-      await page.screenshot({
+      /*await page.screenshot({
         path: 'screenshot_sicelo_2.png',
         fullPage: true,
-      });
+      });*/
 
       await browser.close();
       publications = result;
@@ -166,6 +166,51 @@ export class SearchEngineService {
       return publications;
     } catch (e) {
       console.error('Scielo ', e);
+      return [];
+    }
+  }
+
+  async searchLibgen(body: SearchDTO) {
+    try {
+      let publications = [];
+      const URL = `https://libgen.is/search.php?&res=${body.quantity}&req=${body.q}&phrase=0&view=simple&column=def&sort=def&sortmode=ASC&page=${body.page}`;
+
+      console.error(URL);
+
+      const browser = await puppeteer.launch({
+        headless: true,
+        args,
+        //ignoreDefaultArgs: ['–disable-extensions'],
+      });
+
+      const page = await browser.newPage();
+      await page.goto(URL, { timeout: 0 });
+      //await page.screenshot({ path: 'screenshot_libgen.png', fullPage: true });
+      let result = [];
+
+      result = await page.evaluate(() => {
+        const elements = Array.from(document.querySelectorAll('.c tbody tr'));
+        const publications = elements.map((publication) => ({
+          title: publication.querySelectorAll('td')[2]?.textContent,
+          authors: publication.querySelectorAll('td')[1]?.textContent,
+          siteUrl: publication.querySelectorAll('td a')[3].getAttribute('href'),
+          year: publication.querySelectorAll('td')[4]?.textContent,
+          origin: 'Libgen',
+          language: publication.querySelectorAll('td')[6]?.textContent,
+          journal: publication.querySelectorAll('td')[3]?.textContent,
+        }));
+
+        return publications;
+      });
+
+      await browser.close();
+      publications = result;
+
+      publications = publications.filter((item) => item.title !== 'Title');
+
+      return publications;
+    } catch (e) {
+      console.error('Libgen ', e);
       return [];
     }
   }

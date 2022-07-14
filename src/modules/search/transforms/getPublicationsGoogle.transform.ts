@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const LanguageDetect = require('languagedetect');
 
 import { LANGUAGES } from 'src/@common/constants/language.constant';
 import { getNumberString } from 'src/@common/utils/getNumberString';
 import { getTypePublication } from 'src/@common/utils/getTypePublication';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const countWords = require('count-words');
 const lngDetector = new LanguageDetect();
 

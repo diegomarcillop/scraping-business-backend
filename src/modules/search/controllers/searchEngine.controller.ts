@@ -9,6 +9,7 @@ import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
 import { HistoryService } from '../services/history.service';
 import { SearchEngineService } from '../services/searchEngine.service';
+import { getPublicationsLibgen } from '../transforms/getPublicationsLibgen.transform';
 //import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
 import { getPublicationsScielo } from '../transforms/getPublicationsScielo.transform';
@@ -31,10 +32,6 @@ export class SearchEngineController {
     const quantity = body.quantity;
     body.quantity = body.quantity / 2;
 
-    /*publications = getPublicationsGoogle(
-      await this.searchEngineService.searchGoogleAcademy(body),
-    ).filter((item) => item?.type?.name !== 'CITAS');*/
-
     if (body.page === 1)
       publications = publications.concat(
         getPublicationsRedalyc(
@@ -47,6 +44,18 @@ export class SearchEngineController {
     publications = publications.concat(
       getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
     );
+
+    const filterScielo = publications.filter(
+      (item) => item.origin === 'Scielo',
+    );
+
+    if (filterScielo.length === 0) {
+      publications = publications.concat(
+        getPublicationsLibgen(
+          await this.searchEngineService.searchLibgen(body),
+        ),
+      );
+    }
 
     if (body.year)
       publications = publications.filter((item) => item.year === body.year);
