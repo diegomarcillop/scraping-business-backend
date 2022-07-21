@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const LanguageDetect = require('languagedetect');
 
 import { LANGUAGES } from 'src/@common/constants/language.constant';
@@ -10,15 +11,22 @@ const lngDetector = new LanguageDetect();
 
 export const getPublicationsRedalyc = (publications) => {
   return publications.map((item) => ({
-    ...item,
-    description: getCleanStr(item.description),
-    year: getNumberString(item.year),
-    type: getTypePublication(item.title),
-    quotes: getNumberString(item.quotes),
-    words: getCountWords(`${item.description || item.title}`).slice(0, 4),
-    journal: item.journal.replaceAll(',', '').trim(),
+    title: item.title,
+    description: getCleanStr(item.description) || '',
+    year: getNumberString(item.year) || 'undefined',
+    siteUrl: item.siteUrl,
+    journal: item.journal.replaceAll(',', '').trim() || '',
+    origin: item.origin,
+    authors: '',
+    idiom:
+      LANGUAGES.find(
+        (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
+      )?.name || 'undefined',
     language: LANGUAGES.find(
       (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
     ),
+    type: getTypePublication(item.title),
+    quotes: getNumberString(item.quotes),
+    words: getCountWords(`${item.description || item.title}`).slice(0, 4),
   }));
 };

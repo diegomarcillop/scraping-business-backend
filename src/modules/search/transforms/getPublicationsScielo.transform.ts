@@ -11,15 +11,22 @@ const lngDetector = new LanguageDetect();
 
 export const getPublicationsScielo = (publications) => {
   return publications.map((item) => ({
-    ...item,
+    title: item.title,
+    description: item.description || '',
     year: getNumberString(item.year, 4),
-    type: getTypePublication(item.title),
-    quotes: getNumberString(item.quotes),
-    words: getCountWords(`${item.description || item.title}`).slice(0, 4),
-    authors: getCleanStr(item.authors),
-    journal: item.journal.replaceAll('\n', '').trim(),
+    siteUrl: item.siteUrl,
+    journal: item.journal.replaceAll('\n', '').trim() || '',
+    origin: item.origin,
+    authors: getCleanStr(item.authors) || '',
+    idiom:
+      LANGUAGES.find(
+        (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
+      )?.name || 'undefined',
     language: LANGUAGES.find(
       (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
     ),
+    type: getTypePublication(item.title),
+    quotes: getNumberString(item.quotes),
+    words: getCountWords(`${item.description || item.title}`).slice(0, 4),
   }));
 };
