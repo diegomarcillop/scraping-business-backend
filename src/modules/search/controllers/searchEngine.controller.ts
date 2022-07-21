@@ -4,6 +4,7 @@ import {
   ResponseError,
   ResponseSuccess,
 } from 'src/@common/interfaces/response';
+import { getTextConditions } from 'src/@common/utils/getTextConditions';
 
 import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
@@ -29,8 +30,12 @@ export class SearchEngineController {
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
     let publications = [];
+
     const quantity = body.quantity;
     body.quantity = body.quantity / 2;
+    body.q = getTextConditions(body.q);
+
+    console.error(body, '////');
 
     if (body.page === 1)
       publications = publications.concat(
