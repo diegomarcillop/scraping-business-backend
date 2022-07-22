@@ -10,7 +10,7 @@ import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
 import { HistoryService } from '../services/history.service';
 import { SearchEngineService } from '../services/searchEngine.service';
-import { getPublicationsDianet } from '../transforms/getPublicationsDianet.transform';
+//import { getPublicationsDianet } from '../transforms/getPublicationsDianet.transform';
 import { getPublicationsLibgen } from '../transforms/getPublicationsLibgen.transform';
 //import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
@@ -51,9 +51,9 @@ export class SearchEngineController {
       getPublicationsLibgen(await this.searchEngineService.searchLibgen(body)),
     );
 
-    publications = publications.concat(
+    /*publications = publications.concat(
       getPublicationsDianet(await this.searchEngineService.searchDialnet(body)),
-    );
+    );*/
 
     if (body.year)
       publications = publications.filter((item) => item.year === body.year);
