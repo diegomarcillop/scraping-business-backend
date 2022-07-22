@@ -10,6 +10,7 @@ import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
 import { HistoryService } from '../services/history.service';
 import { SearchEngineService } from '../services/searchEngine.service';
+import { getPublicationsDianet } from '../transforms/getPublicationsDianet.transform';
 import { getPublicationsLibgen } from '../transforms/getPublicationsLibgen.transform';
 //import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
@@ -31,11 +32,9 @@ export class SearchEngineController {
   ): Promise<ResponseSuccess | ResponseError> {
     let publications = [];
 
-    const quantity = body.quantity;
-    body.quantity = body.quantity / 2;
+    //const quantity = body.quantity;
+    //body.quantity = body.quantity / 2;
     body.q = getTextConditions(body.q);
-
-    console.error(body, '////');
 
     if (body.page === 1)
       publications = publications.concat(
@@ -44,23 +43,17 @@ export class SearchEngineController {
         ),
       );
 
-    if (publications.length === 0) body.quantity = quantity;
-
     publications = publications.concat(
       getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
     );
 
-    const filterScielo = publications.filter(
-      (item) => item.origin === 'Scielo',
+    publications = publications.concat(
+      getPublicationsLibgen(await this.searchEngineService.searchLibgen(body)),
     );
 
-    if (filterScielo.length === 0) {
-      publications = publications.concat(
-        getPublicationsLibgen(
-          await this.searchEngineService.searchLibgen(body),
-        ),
-      );
-    }
+    publications = publications.concat(
+      getPublicationsDianet(await this.searchEngineService.searchDialnet(body)),
+    );
 
     if (body.year)
       publications = publications.filter((item) => item.year === body.year);

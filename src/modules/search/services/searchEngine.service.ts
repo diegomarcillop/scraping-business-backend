@@ -69,6 +69,7 @@ export class SearchEngineService {
     }
   }
 
+  //Pages [10, 20, 30, 40, 50, 60, 80, 100]
   async searchRedalyc(body: SearchDTO) {
     let publications = [];
     const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
@@ -114,6 +115,7 @@ export class SearchEngineService {
     return publications;
   }
 
+  // PAGES: [LIBRES]
   async searchScielo(body: SearchDTO) {
     try {
       body.q = body.q.split(' ').join('+');
@@ -132,7 +134,6 @@ export class SearchEngineService {
       const browser = await puppeteer.launch({
         headless: true,
         args,
-        //ignoreDefaultArgs: ['–disable-extensions'],
       });
 
       const page = await browser.newPage();
@@ -170,6 +171,7 @@ export class SearchEngineService {
     }
   }
 
+  //25 - 50 - 100
   async searchLibgen(body: SearchDTO) {
     try {
       let publications = [];
@@ -211,6 +213,60 @@ export class SearchEngineService {
       return publications;
     } catch (e) {
       console.error('Libgen ', e);
+      return [];
+    }
+  }
+
+  // PAGE = [10, 20, 50]
+  async searchDialnet(body: SearchDTO) {
+    body.q = body.q.split(' ').join('+');
+    try {
+      let publications = [];
+      const URL = `https://dialnet.unirioja.es/buscar/documentos?querysDismax.DOCUMENTAL_TODO=${body.q}&inicio=60`;
+
+      console.error(URL);
+
+      const browser = await puppeteer.launch({
+        headless: true,
+        args,
+      });
+
+      const page = await browser.newPage();
+      await page.goto(URL, { timeout: 0 });
+      await page.screenshot({ path: 'screenshot_dianet.png', fullPage: true });
+
+      let result = [];
+
+      result = await page.evaluate(() => {
+        const elements = Array.from(
+          document.querySelectorAll('#listadoDeArticulos li'),
+        );
+        const publications = elements.map((publication) => ({
+          title: publication.querySelector('.descripcion .titulo')?.textContent,
+          authors: publication.querySelector('.descripcion .autores')
+            ?.textContent,
+          siteUrl: publication
+            .querySelector('.descripcion .titulo a')
+            ?.getAttribute('href'),
+          year: publication.querySelectorAll('.localizacion a')[1]?.textContent,
+          origin: 'Libgen',
+          language: publication.querySelector('.descripcion .titulo')
+            ?.textContent,
+          journal:
+            publication.querySelectorAll('.localizacion a')[0]?.textContent,
+        }));
+
+        return publications;
+      });
+
+      await browser.close();
+      publications = result;
+
+      //publications = publications.filter((item) => item.title !== 'Title');
+
+      return publications;
+    } catch (e) {
+      console.error('Dianet ', e);
       return [];
     }
   }
