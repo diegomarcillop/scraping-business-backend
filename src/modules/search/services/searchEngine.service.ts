@@ -36,7 +36,7 @@ export class SearchEngineService {
         const page = await browser.newPage();
         await page.goto(URL, { timeout: 0 });
 
-        await page.screenshot({ path: 'screenshot.png' });
+        //await page.screenshot({ path: 'screenshot.png' });
         await page.click('.gs_r.gs_or.gs_scl');
 
         let result = [];
@@ -233,7 +233,7 @@ export class SearchEngineService {
 
       const page = await browser.newPage();
       await page.goto(URL, { timeout: 0 });
-      await page.screenshot({ path: 'screenshot_dianet.png', fullPage: true });
+      //await page.screenshot({ path: 'screenshot_dianet.png', fullPage: true });
 
       let result = [];
 

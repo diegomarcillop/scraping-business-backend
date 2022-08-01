@@ -12,6 +12,7 @@ import typeormConfig from './@common/config/typeorm.config';
 import { SearchModule } from './modules/search/search.module';
 import { UserModule } from './modules/user/user.module';
 import { UtilsModule } from './modules/utils/utils.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { UtilsModule } from './modules/utils/utils.module';
     SearchModule,
     UserModule,
     UtilsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

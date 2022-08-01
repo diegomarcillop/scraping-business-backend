@@ -14,6 +14,8 @@ import { SignUpService } from './services/signup.service';
 import { Category } from 'src/entities/user/category.entity';
 import { Business } from 'src/entities/business/business.entity';
 import { BusinessUser } from 'src/entities/business/businessUser.entity';
+import { MailModule } from '../mail/mail.module';
+import { RecoverPasswordService } from './services/recoverPassword.service';
 
 @Module({
   imports: [
@@ -26,8 +28,15 @@ import { BusinessUser } from 'src/entities/business/businessUser.entity';
         signOptions: { expiresIn: configService.get('JWT_EXPIRE') },
       }),
     }),
+    MailModule,
   ],
   controllers: [AuthController],
-  providers: [JwtStrategy, LoginService, TokenService, SignUpService],
+  providers: [
+    JwtStrategy,
+    LoginService,
+    TokenService,
+    SignUpService,
+    RecoverPasswordService,
+  ],
 })
 export class AuthModule {}
