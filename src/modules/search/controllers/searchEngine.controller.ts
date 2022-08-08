@@ -30,6 +30,7 @@ export class SearchEngineController {
     @Request() req,
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
+    const text = body.q;
     let publications = [];
 
     //const quantity = body.quantity;
@@ -61,9 +62,9 @@ export class SearchEngineController {
     const filters = await this.filterService.getFilters(publications);
 
     this.historyService.create({
-      text: body.q,
       userId: req.user.id,
       quantity: publications.length,
+      text,
     });
 
     return {
