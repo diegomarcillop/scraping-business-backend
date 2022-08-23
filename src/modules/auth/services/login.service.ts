@@ -21,6 +21,12 @@ export class LoginService {
       where: body,
     });
 
+    if (!user)
+      throw new BadRequestException({
+        error: 'USER_NOT_EXIST',
+        detail: 'Tu correo electronico o contraseña no son válidos.',
+      });
+
     if (body.code) {
       if (user.state === State.Unverified && user.code === body.code) {
         await this.userRepository.update(user.id, {
@@ -29,12 +35,6 @@ export class LoginService {
         });
       }
     }
-
-    if (!user)
-      throw new BadRequestException({
-        error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
-      });
 
     return await this.tokenService.serializeToken(user.email);
   }
