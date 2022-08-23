@@ -4,6 +4,7 @@ import { ROLES } from 'src/@common/constants/roles.constant';
 import { Business } from 'src/entities/business/business.entity';
 import { BusinessUser } from 'src/entities/business/businessUser.entity';
 import { Category } from 'src/entities/user/category.entity';
+import { MailService } from 'src/modules/mail/mail.service';
 import { getManager, Repository } from 'typeorm';
 
 import { Person } from '../../../entities/user/person.entity';
@@ -27,6 +28,7 @@ export class SignUpService {
     private readonly businessRepository: Repository<Business>,
     @InjectRepository(BusinessUser, 'business')
     private readonly businessUserRepository: Repository<BusinessUser>,
+    private readonly mailService: MailService,
 
     private readonly tokenService: TokenService,
   ) {}
@@ -87,6 +89,16 @@ export class SignUpService {
       );
     });
 
-    return await this.tokenService.serializeToken(body.email);
+    //send email verify
+    await this.mailService.sendEmail({
+      templateName: 'recoverPassword',
+      email: body.email,
+      subject: 'Verificación de cuenta',
+      name: body.name,
+      code: '',
+      url: `${process.env.APP_HOST_CLIENT}/login`,
+    });
+
+    //return await this.tokenService.serializeToken(body.email);
   }
 }
