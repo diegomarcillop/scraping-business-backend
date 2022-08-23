@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { getManager, Repository } from 'typeorm';
+import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
+
 import { ROLES } from 'src/@common/constants/roles.constant';
 import { Business } from 'src/entities/business/business.entity';
 import { BusinessUser } from 'src/entities/business/businessUser.entity';
 import { Category } from 'src/entities/user/category.entity';
 import { MailService } from 'src/modules/mail/mail.service';
-import { getManager, Repository } from 'typeorm';
-
 import { Person } from '../../../entities/user/person.entity';
 import { Rol } from '../../../entities/user/rol.entity';
 import { User } from '../../../entities/user/user.entity';
 import { SignupDTO } from '../dto/signup.dto';
 import { TokenService } from './token.service';
+import { State } from 'src/entities/enums/states.enum';
 
 @Injectable()
 export class SignUpService {
@@ -37,7 +39,7 @@ export class SignUpService {
     const isUser = await this.userRepository.findOne({
       select: ['id', 'state', 'email'],
       relations: ['person'],
-      where: { email: body.email, state: 'active' },
+      where: { email: body.email },
     });
 
     if (isUser)
@@ -54,12 +56,16 @@ export class SignUpService {
       where: { id: body.categoryId },
     });
 
+    const code = randomStringGenerator();
+
     await getManager('user').transaction(async (entityManager) => {
       const user = await entityManager.save(
         this.userRepository.create({
           email: body.email,
           phone: body.phone,
           password: body.password,
+          code,
+          state: State.Unverified,
           rol,
           category,
         }),
@@ -90,15 +96,18 @@ export class SignUpService {
     });
 
     //send email verify
-    await this.mailService.sendEmail({
+    /*await this.mailService.sendEmail({
       templateName: 'verifyEmail',
       email: body.email,
       subject: 'Verificación de cuenta',
       name: body.name,
       code: '',
       url: `${process.env.APP_HOST_CLIENT}/login`,
-    });
+    });*/
 
     //return await this.tokenService.serializeToken(body.email);
+    return {
+      url: `${process.env.APP_HOST_CLIENT}/login?code=${code}`,
+    };
   }
 }

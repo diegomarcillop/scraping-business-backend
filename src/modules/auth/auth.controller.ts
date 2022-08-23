@@ -59,11 +59,11 @@ export class AuthController {
 
     const response: any = await this.signupService.signupUser(body);
 
-    if (response.error) throw new BadRequestException(response);
+    if (response?.error) throw new BadRequestException(response);
 
     return {
       success: 'OK',
-      payload: await this.jwtService.sign({ ...response }),
+      payload: response,
     };
   }
 

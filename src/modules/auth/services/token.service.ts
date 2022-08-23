@@ -17,24 +17,29 @@ export class TokenService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  serializeToken = async (email: string, phone?: string) => {
+  serializeToken = async (email: string) => {
     const query = this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.email'])
+      .select(['user.id', 'user.email', 'user.state'])
       .innerJoinAndSelect('user.person', 'person');
 
     if (email)
-      query.where('user.email = :email AND user.state = :state', {
+      query.where('user.email = :email', {
         email,
-        state: State.Active,
       });
 
     const user = await query.getOne();
 
-    if (!user)
+    if (user.state === State.Inactive)
       throw new BadRequestException({
         error: 'USER_INACTIVE',
         detail: 'El usuario se encuentra inactivado.',
+      });
+
+    if (user.state === State.Unverified)
+      throw new BadRequestException({
+        error: 'USER_UNVERIFIED',
+        detail: 'El usuario no tiene la cuenta verificada.',
       });
 
     const token: TokenJwt = {
