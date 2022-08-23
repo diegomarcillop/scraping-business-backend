@@ -96,18 +96,13 @@ export class SignUpService {
     });
 
     //send email verify
-    /*await this.mailService.sendEmail({
+    await this.mailService.sendEmail({
       templateName: 'verifyEmail',
       email: body.email,
       subject: 'Verificación de cuenta',
       name: body.name,
       code: '',
-      url: `${process.env.APP_HOST_CLIENT}/login`,
-    });*/
-
-    //return await this.tokenService.serializeToken(body.email);
-    return {
       url: `${process.env.APP_HOST_CLIENT}/login?code=${code}`,
-    };
+    });
   }
 }
