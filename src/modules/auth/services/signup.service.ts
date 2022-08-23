@@ -91,7 +91,7 @@ export class SignUpService {
 
     //send email verify
     await this.mailService.sendEmail({
-      templateName: 'recoverPassword',
+      templateName: 'verifyEmail',
       email: body.email,
       subject: 'Verificación de cuenta',
       name: body.name,
