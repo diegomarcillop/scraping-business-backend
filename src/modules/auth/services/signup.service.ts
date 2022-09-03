@@ -45,7 +45,7 @@ export class SignUpService {
     if (isUser)
       return {
         error: 'EMAIL_IN_USE',
-        detail: 'El correo electronico ya está siendo utilizado.',
+        detail: 'El correo electrónico ya está siendo utilizado.',
       };
 
     const rol = await this.rolRepository.findOne({

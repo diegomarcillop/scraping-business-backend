@@ -24,7 +24,7 @@ export class LoginService {
     if (!user)
       throw new BadRequestException({
         error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
+        detail: 'Tu correo electrónico o contraseña no son válidos.',
       });
 
     if (body.code) {

@@ -35,7 +35,7 @@ export class UserService {
     if (!user)
       return {
         error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
+        detail: 'Tu correo electrónico o contraseña no son válidos.',
       };
 
     return user;
@@ -50,7 +50,7 @@ export class UserService {
     if (!user)
       return {
         error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
+        detail: 'Tu correo electrónico o contraseña no son válidos.',
       };
 
     const businessUser: any = await this.businessUserRepository
@@ -75,7 +75,7 @@ export class UserService {
     if (!user)
       return {
         error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
+        detail: 'Tu correo electrónico o contraseña no son válidos.',
       };
 
     if (user.email !== body.email) {
@@ -88,7 +88,7 @@ export class UserService {
       if (isUser)
         return {
           error: 'EMAIL_IN_USE',
-          detail: 'El correo electronico ya está siendo utilizado.',
+          detail: 'El correo electrónico ya está siendo utilizado.',
         };
     }
 
@@ -119,7 +119,7 @@ export class UserService {
     if (!user)
       return {
         error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
+        detail: 'Tu correo electrónico o contraseña no son válidos.',
       };
 
     const businessUser: any = await this.businessUserRepository

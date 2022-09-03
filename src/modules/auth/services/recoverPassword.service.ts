@@ -28,7 +28,7 @@ export class RecoverPasswordService {
     if (!user)
       return {
         error: 'USER_NOT_EXIST',
-        detail: 'Tu correo electronico o contraseña no son válidos.',
+        detail: 'Tu correo electrónico o contraseña no son válidos.',
       };
 
     const person = await this.personRepository.findOne({
