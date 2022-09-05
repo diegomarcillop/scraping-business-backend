@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { getConvertSearch } from 'src/@common/utils/getConvertSearch';
 
 import { SearchDTO } from '../dto/search.dto';
 
@@ -20,7 +21,7 @@ export class SearchEngineService {
         }&q=${body.q}`;
 
         const page = await browser.newPage();
-        await page.goto(URL, { timeout: 0 });
+        await page.goto(URL);
 
         await page.click('.gs_r.gs_or.gs_scl');
 
@@ -55,39 +56,50 @@ export class SearchEngineService {
 
   //Pages [10, 20, 30, 40, 50, 60, 80, 100]
   async searchRedalyc(body: SearchDTO, browser: any) {
-    let publications = [];
-    const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
+    try {
+      let publications = [];
 
-    const page = await browser.newPage();
-    await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
+      body.q = getConvertSearch(body.q);
+      const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
 
-    await page.waitForSelector('.contentcard');
-    await page.select('select#pageSize', body.quantity.toString());
-    await page.waitForTimeout(10000);
+      console.error(URL);
+      const page = await browser.newPage();
+      await page.goto(URL);
+      await page.screenshot({
+        path: 'screenshot_redalyc_2.png',
+        fullPage: true,
+      });
+      await page.waitForSelector('.contentcard');
+      await page.select('select#pageSize', body.quantity.toString());
+      await page.waitForTimeout(10000);
 
-    let result = [];
+      let result = [];
 
-    result = await page.evaluate(() => {
-      const elements = Array.from(document.querySelectorAll('.contentcard'));
-      const publications = elements.map((publication) => ({
-        title: publication.querySelector('.ng-binding').textContent,
-        description: publication.querySelector('p .article-contenido')
-          .textContent,
-        year: publication.querySelector('.articulo-hover .ng-binding')
-          .textContent,
-        siteUrl: publication
-          .querySelector('.productos-articulo a')
-          .getAttribute('href'),
-        journal: publication.querySelector('.nomRevista-hover .ng-binding')
-          .textContent,
-        origin: 'Redalyc',
-      }));
+      result = await page.evaluate(() => {
+        const elements = Array.from(document.querySelectorAll('.contentcard'));
+        const publications = elements.map((publication) => ({
+          title: publication.querySelector('.ng-binding').textContent,
+          description: publication.querySelector('p .article-contenido')
+            .textContent,
+          year: publication.querySelector('.articulo-hover .ng-binding')
+            .textContent,
+          siteUrl: publication
+            .querySelector('.productos-articulo a')
+            .getAttribute('href'),
+          journal: publication.querySelector('.nomRevista-hover .ng-binding')
+            .textContent,
+          origin: 'Redalyc',
+        }));
+        return publications;
+      });
+
+      await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+      publications = result;
       return publications;
-    });
-
-    //await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
-    publications = result;
-    return publications;
+    } catch (e) {
+      console.error('Realyc', JSON.stringify(e));
+      return [];
+    }
   }
 
   // PAGES: [LIBRES]
@@ -104,9 +116,10 @@ export class SearchEngineService {
         body.page || PAGE_DEFAULT
       }&q=${body.q}&lang=pt`;
 
+      console.error(URL);
       const page = await browser.newPage();
-      await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
-      //await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
+      await page.goto(URL);
+      await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
       let result = [];
 
       result = await page.evaluate(() => {
@@ -139,8 +152,9 @@ export class SearchEngineService {
       let publications = [];
       const URL = `https://libgen.is/search.php?&res=${body.quantity}&req=${body.q}&phrase=0&view=simple&column=def&sort=def&sortmode=ASC&page=${body.page}`;
 
+      console.error(URL);
       const page = await browser.newPage();
-      await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
+      await page.goto(URL);
       //await page.screenshot({ path: 'screenshot_libgen.png', fullPage: true });
       let result = [];
 
@@ -176,9 +190,9 @@ export class SearchEngineService {
       let publications = [];
       const URL = `https://dialnet.unirioja.es/buscar/documentos?querysDismax.DOCUMENTAL_TODO=${body.q}&inicio=60`;
 
+      console.error(URL);
       const page = await browser.newPage();
-      await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
-      //await page.screenshot({ path: 'screenshot_dianet.png', fullPage: true });
+      await page.goto(URL);
 
       let result = [];
 

@@ -1,5 +1,5 @@
 export const getCleanStr = (str) => {
-  return str
+  return (str || '')
     .replaceAll('\n', '')
     .replaceAll('.', '')
     .split(';')
