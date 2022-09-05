@@ -29,6 +29,17 @@ export class HistoryService {
         detail: 'El usuario no existe.',
       };
 
+    const item = await this.historyRepository.findOne({
+      select: ['id', 'state', 'text'],
+      where: { text: body.text, state: State.Active },
+    });
+
+    if (item) {
+      await this.historyRepository.update(item.id, {
+        state: State.Inactive,
+      });
+    }
+
     await getManager('search').transaction(async (entityManager) => {
       const objectPublication: any = {
         text: body.text,
