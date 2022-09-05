@@ -65,10 +65,11 @@ export class SearchEngineService {
       console.error(URL);
       const page = await browser.newPage();
       await page.goto(URL);
-      await page.screenshot({
+      /*await page.screenshot({
         path: 'screenshot_redalyc_2.png',
         fullPage: true,
-      });
+      });*/
+
       await page.waitForSelector('.contentcard');
       await page.select('select#pageSize', body.quantity.toString());
       await page.waitForTimeout(10000);
@@ -93,7 +94,7 @@ export class SearchEngineService {
         return publications;
       });
 
-      await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
+      //await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
       publications = result;
       return publications;
     } catch (e) {
@@ -119,7 +120,7 @@ export class SearchEngineService {
       console.error(URL);
       const page = await browser.newPage();
       await page.goto(URL);
-      await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
+      //await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
       let result = [];
 
       result = await page.evaluate(() => {
