@@ -9,14 +9,14 @@ export const LANGUAGES = [
     state: State.Active,
   },
   {
-    name: 'Ingles',
+    name: 'Inglés',
     nameEnglish: 'english',
     key: 'english',
     band: '🇺🇸',
     state: State.Active,
   },
   {
-    name: 'Portugues',
+    name: 'Portugués',
     nameEnglish: 'portuguese',
     key: 'portuguese',
     band: '🇵🇹',
