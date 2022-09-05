@@ -5,19 +5,11 @@ import { SearchDTO } from '../dto/search.dto';
 const PAGE_DEFAULT = 1;
 const TOTAL_PAGE_DEFAULT = '10';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const puppeteer = require('puppeteer');
-const args = [
-  '--disable-notifications',
-  '--no-sandbox',
-  '--disable-setuid-sandbox',
-];
-
 @Injectable()
 export class SearchEngineService {
   //constructor() {}
 
-  async searchGoogleAcademy(body: SearchDTO) {
+  async searchGoogleAcademy(body: SearchDTO, browser: any) {
     try {
       let publications = [];
       let index = 0;
@@ -27,16 +19,9 @@ export class SearchEngineService {
           body.page || PAGE_DEFAULT
         }&q=${body.q}`;
 
-        const browser = await puppeteer.launch({
-          headless: true,
-          args,
-          //ignoreDefaultArgs: ['–disable-extensions'],
-        });
-
         const page = await browser.newPage();
         await page.goto(URL, { timeout: 0 });
 
-        //await page.screenshot({ path: 'screenshot.png' });
         await page.click('.gs_r.gs_or.gs_scl');
 
         let result = [];
@@ -60,7 +45,6 @@ export class SearchEngineService {
         });
 
         publications = [...publications, ...result];
-        await browser.close();
         index++;
       }
       return publications;
@@ -70,18 +54,12 @@ export class SearchEngineService {
   }
 
   //Pages [10, 20, 30, 40, 50, 60, 80, 100]
-  async searchRedalyc(body: SearchDTO) {
+  async searchRedalyc(body: SearchDTO, browser: any) {
     let publications = [];
     const URL = `https://www.redalyc.org/busquedaArticuloFiltros.oa?q=${body.q}`;
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args,
-      //ignoreDefaultArgs: ['–disable-extensions'],
-    });
-
     const page = await browser.newPage();
-    await page.goto(URL, { timeout: 0 });
+    await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
 
     await page.waitForSelector('.contentcard');
     await page.select('select#pageSize', body.quantity.toString());
@@ -108,15 +86,12 @@ export class SearchEngineService {
     });
 
     //await page.screenshot({ path: 'screenshot_redalyc.png', fullPage: true });
-
-    await browser.close();
     publications = result;
-
     return publications;
   }
 
   // PAGES: [LIBRES]
-  async searchScielo(body: SearchDTO) {
+  async searchScielo(body: SearchDTO, browser: any) {
     try {
       body.q = body.q.split(' ').join('+');
       const maxCount = 100;
@@ -129,15 +104,8 @@ export class SearchEngineService {
         body.page || PAGE_DEFAULT
       }&q=${body.q}&lang=pt`;
 
-      console.error(URL);
-
-      const browser = await puppeteer.launch({
-        headless: true,
-        args,
-      });
-
       const page = await browser.newPage();
-      await page.goto(URL, { timeout: 0 });
+      await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
       //await page.screenshot({ path: 'screenshot_scielo.png', fullPage: true });
       let result = [];
 
@@ -156,12 +124,6 @@ export class SearchEngineService {
         return publications;
       });
 
-      /*await page.screenshot({
-        path: 'screenshot_sicelo_2.png',
-        fullPage: true,
-      });*/
-
-      await browser.close();
       publications = result;
 
       return publications;
@@ -172,21 +134,13 @@ export class SearchEngineService {
   }
 
   //25 - 50 - 100
-  async searchLibgen(body: SearchDTO) {
+  async searchLibgen(body: SearchDTO, browser: any) {
     try {
       let publications = [];
       const URL = `https://libgen.is/search.php?&res=${body.quantity}&req=${body.q}&phrase=0&view=simple&column=def&sort=def&sortmode=ASC&page=${body.page}`;
 
-      console.error(URL);
-
-      const browser = await puppeteer.launch({
-        headless: true,
-        args,
-        //ignoreDefaultArgs: ['–disable-extensions'],
-      });
-
       const page = await browser.newPage();
-      await page.goto(URL, { timeout: 0 });
+      await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
       //await page.screenshot({ path: 'screenshot_libgen.png', fullPage: true });
       let result = [];
 
@@ -205,9 +159,7 @@ export class SearchEngineService {
         return publications;
       });
 
-      await browser.close();
       publications = result;
-
       publications = publications.filter((item) => item.title !== 'Title');
 
       return publications;
@@ -218,21 +170,14 @@ export class SearchEngineService {
   }
 
   // PAGE = [10, 20, 50]
-  async searchDialnet(body: SearchDTO) {
+  async searchDialnet(body: SearchDTO, browser: any) {
     body.q = body.q.split(' ').join('+');
     try {
       let publications = [];
       const URL = `https://dialnet.unirioja.es/buscar/documentos?querysDismax.DOCUMENTAL_TODO=${body.q}&inicio=60`;
 
-      console.error(URL);
-
-      const browser = await puppeteer.launch({
-        headless: true,
-        args,
-      });
-
       const page = await browser.newPage();
-      await page.goto(URL, { timeout: 0 });
+      await page.goto(URL, { timeout: 0, waitUntil: 'networkidle2' });
       //await page.screenshot({ path: 'screenshot_dianet.png', fullPage: true });
 
       let result = [];
@@ -259,10 +204,7 @@ export class SearchEngineService {
         return publications;
       });
 
-      await browser.close();
       publications = result;
-
-      //publications = publications.filter((item) => item.title !== 'Title');
 
       return publications;
     } catch (e) {

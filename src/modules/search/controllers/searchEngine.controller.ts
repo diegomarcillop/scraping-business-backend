@@ -10,11 +10,17 @@ import { SearchDTO } from '../dto/search.dto';
 import { FilterService } from '../services/filter.service';
 import { HistoryService } from '../services/history.service';
 import { SearchEngineService } from '../services/searchEngine.service';
-//import { getPublicationsDianet } from '../transforms/getPublicationsDianet.transform';
 import { getPublicationsLibgen } from '../transforms/getPublicationsLibgen.transform';
-//import { getPublicationsGoogle } from '../transforms/getPublicationsGoogle.transform';
 import { getPublicationsRedalyc } from '../transforms/getPublicationsRedalyc.transform';
 import { getPublicationsScielo } from '../transforms/getPublicationsScielo.transform';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const puppeteer = require('puppeteer');
+const args = [
+  '--disable-notifications',
+  '--no-sandbox',
+  '--disable-setuid-sandbox',
+];
 
 @Controller('search')
 export class SearchEngineController {
@@ -30,31 +36,35 @@ export class SearchEngineController {
     @Request() req,
     @Body() body: SearchDTO,
   ): Promise<ResponseSuccess | ResponseError> {
+    //Init browser
+    const browser = await puppeteer.launch({
+      headless: true,
+      args,
+    });
+
     const text = body.q;
     let publications = [];
 
-    //const quantity = body.quantity;
-    //body.quantity = body.quantity / 2;
     body.q = getTextConditions(body.q);
 
     if (body.page === 1)
       publications = publications.concat(
         getPublicationsRedalyc(
-          await this.searchEngineService.searchRedalyc(body),
+          await this.searchEngineService.searchRedalyc(body, browser),
         ),
       );
 
     publications = publications.concat(
-      getPublicationsScielo(await this.searchEngineService.searchScielo(body)),
+      getPublicationsScielo(
+        await this.searchEngineService.searchScielo(body, browser),
+      ),
     );
 
     publications = publications.concat(
-      getPublicationsLibgen(await this.searchEngineService.searchLibgen(body)),
+      getPublicationsLibgen(
+        await this.searchEngineService.searchLibgen(body, browser),
+      ),
     );
-
-    /*publications = publications.concat(
-      getPublicationsDianet(await this.searchEngineService.searchDialnet(body)),
-    );*/
 
     if (body.year)
       publications = publications.filter((item) => item.year === body.year);
@@ -66,6 +76,8 @@ export class SearchEngineController {
       quantity: publications.length,
       text,
     });
+
+    await browser.close(); // Close browser
 
     return {
       success: 'OK',
