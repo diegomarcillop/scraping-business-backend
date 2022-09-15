@@ -10,7 +10,7 @@ import { getTypePublication } from 'src/@common/utils/getTypePublication';
 const lngDetector = new LanguageDetect();
 
 export const getPublicationsRedalyc = (publications) => {
-  return publications.map((item) => ({
+  return publications.map((item, index) => ({
     title: item.title,
     description: getCleanStr(item.description) || '',
     year: getNumberString(item.year) || 'undefined',
@@ -28,5 +28,6 @@ export const getPublicationsRedalyc = (publications) => {
     type: getTypePublication(item.title),
     quotes: getNumberString(item.quotes),
     words: getCountWords(`${item.description || item.title}`).slice(0, 4),
+    code: `${item.origin}${index}${item.title?.length}`,
   }));
 };

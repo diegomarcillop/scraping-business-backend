@@ -11,7 +11,7 @@ const lngDetector = new LanguageDetect();
 
 export const getPublicationsGoogle = (publications) => {
   return (
-    publications?.map((item) => ({
+    publications?.map((item, index) => ({
       ...item,
       year: getNumberString(item.year, 4),
       type: getTypePublication(item.title),
@@ -20,6 +20,7 @@ export const getPublicationsGoogle = (publications) => {
       language: LANGUAGES.find(
         (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
       ),
+      code: `${item.origin}${index}${item.title?.length}`,
     })) || []
   );
 };

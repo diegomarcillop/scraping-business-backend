@@ -8,7 +8,7 @@ import { getNumberString } from 'src/@common/utils/getNumberString';
 const lngDetector = new LanguageDetect();
 
 export const getPublicationsLibgen = (publications) => {
-  return publications.map((item) => ({
+  return publications.map((item, index) => ({
     title: item.title,
     description: '',
     year: getNumberString(item.year, 4),
@@ -23,5 +23,6 @@ export const getPublicationsLibgen = (publications) => {
     language: LANGUAGES.find(
       (language) => language.key === lngDetector.detect(item.title, 2)[0][0],
     ),
+    code: `${item.origin}${index}${item.title?.length}`,
   }));
 };

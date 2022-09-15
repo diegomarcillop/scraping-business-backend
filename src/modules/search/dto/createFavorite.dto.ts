@@ -40,4 +40,8 @@ export class CreateFavoriteDTO {
   @IsOptional()
   @IsString()
   typeKey: string;
+
+  @IsOptional()
+  @IsString()
+  code: string;
 }

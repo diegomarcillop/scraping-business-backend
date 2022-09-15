@@ -8,7 +8,7 @@ import { getNumberString } from 'src/@common/utils/getNumberString';
 const lngDetector = new LanguageDetect();
 
 export const getPublicationsDianet = (publications) => {
-  return publications.map((item) => ({
+  return publications.map((item, index) => ({
     title: item.title,
     description: '',
     year: getNumberString(item.year, 4),
@@ -30,5 +30,6 @@ export const getPublicationsDianet = (publications) => {
               language.key === lngDetector.detect(item.title, 2)[0][0],
           ) || 'undefined'
         : 'undefined',
+    code: `${item.origin}${index}${item.title?.length}`,
   }));
 };

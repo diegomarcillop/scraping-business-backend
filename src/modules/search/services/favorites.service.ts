@@ -45,6 +45,7 @@ export class FavoritesService {
         authors: body.authors,
         year: body.year,
         quotes: body.quotes,
+        code: body.code,
       };
 
       let type: any;

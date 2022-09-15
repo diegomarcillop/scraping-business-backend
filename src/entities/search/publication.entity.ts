@@ -40,6 +40,9 @@ export class Publication {
   @Column('character varying')
   origin: string;
 
+  @Column('character varying', { nullable: true })
+  code: string;
+
   @Column('numeric', { nullable: true })
   year: number;
 
