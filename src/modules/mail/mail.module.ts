@@ -12,6 +12,7 @@ import { join } from 'path';
       transport: {
         host: 'smtp.gmail.com',
         secure: false,
+        port: 465,
         //tls: {},
         auth: {
           user: process.env.EMAIL_SMTP,
