@@ -11,7 +11,7 @@ import { join } from 'path';
       // or
       transport: {
         host: 'smtp.gmail.com',
-        secure: false,
+        secure: true,
         port: 465,
         //tls: {},
         auth: {
