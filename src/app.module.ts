@@ -24,14 +24,14 @@ import { MailModule } from './modules/mail/mail.module';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
-        configService.get('typeorm.user'),
-      name: 'user',
+        configService.get('typeorm.search'),
+      name: 'search',
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
-        configService.get('typeorm.search'),
-      name: 'search',
+        configService.get('typeorm.user'),
+      name: 'user',
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

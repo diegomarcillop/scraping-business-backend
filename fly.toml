@@ -1,0 +1,15 @@
+# fly.toml app configuration file generated for udlavite-api on 2023-06-26T15:40:37-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "udlavite-api"
+primary_region = "ord"
+kill_signal = "SIGTERM"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0

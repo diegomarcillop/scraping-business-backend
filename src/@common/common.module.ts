@@ -20,8 +20,8 @@ import { LanguageDatabaseDefault } from './database/language.default';
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Person, Rol, Category], 'user'),
     TypeOrmModule.forFeature([TypePublication, Language], 'search'),
+    TypeOrmModule.forFeature([User, Person, Rol, Category], 'user'),
     HttpModule,
   ],
   providers: [

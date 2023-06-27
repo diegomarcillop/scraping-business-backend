@@ -17,7 +17,7 @@ async function bootstrap() {
   app.setGlobalPrefix(appPrefix);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(appPort || '4200');
+  await app.listen(3000 || '3000', '0.0.0.0');
 
   console.log(`Server running on 1 ${appHostServer}/${appPrefix}`);
 }

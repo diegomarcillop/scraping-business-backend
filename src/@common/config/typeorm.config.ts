@@ -3,23 +3,15 @@ import { registerAs } from '@nestjs/config';
 export default registerAs('typeorm', () => {
   const configDefault = {
     type: process.env.DB_TYPE,
-    host: process.env.DB_HOST,
-    port: +process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    url: process.env.DATABASE_URL,
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: ['dist/entities/**/*.entity.js'],
-    ssl:
-      process.env.NODE_ENV !== 'local'
-        ? { rejectUnauthorized: false }
-        : undefined,
   };
 
   return {
-    user: configDefault,
     business: configDefault,
     search: configDefault,
+    user: configDefault,
   };
 });
