@@ -18,7 +18,7 @@ import { History } from '../search/history.entity';
 import { Rol } from './rol.entity';
 import { Category } from './category.entity';
 
-@Entity('user', { schema: 'user' })
+@Entity('user')
 @Unique(['email', 'phone'])
 export class User {
   @PrimaryGeneratedColumn({ type: 'bigint' })

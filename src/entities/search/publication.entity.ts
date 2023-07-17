@@ -14,7 +14,7 @@ import { Favorite } from './favorite.entity';
 import { Language } from './language.entity';
 import { TypePublication } from './typePublication.entity';
 
-@Entity('publication', { schema: 'search' })
+@Entity('publication')
 export class Publication {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

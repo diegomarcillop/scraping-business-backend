@@ -40,6 +40,7 @@ export class SearchEngineController {
     const browser = await puppeteer.launch({
       headless: true,
       args,
+      executablePath: '/usr/bin/google-chrome',
     });
 
     const text = body.q;

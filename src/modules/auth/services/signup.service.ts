@@ -65,7 +65,7 @@ export class SignUpService {
           phone: body.phone,
           password: body.password,
           code,
-          state: State.Unverified,
+          state: State.Active,
           rol,
           category,
         }),

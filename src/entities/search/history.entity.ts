@@ -11,7 +11,7 @@ import {
 import { User } from '../user/user.entity';
 import { State } from '../enums/states.enum';
 
-@Entity('history', { schema: 'search' })
+@Entity('history')
 export class History {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

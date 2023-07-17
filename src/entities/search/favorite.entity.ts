@@ -12,7 +12,7 @@ import { User } from '../user/user.entity';
 import { State } from '../enums/states.enum';
 import { Publication } from './publication.entity';
 
-@Entity('favorite', { schema: 'search' })
+@Entity('favorite')
 export class Favorite {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

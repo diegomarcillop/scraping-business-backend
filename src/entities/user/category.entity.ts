@@ -11,7 +11,7 @@ import { State } from '../enums/states.enum';
 import { User } from './user.entity';
 import { InterestCategory } from './interestCategory.entity';
 
-@Entity('category', { schema: 'user' })
+@Entity('category')
 export class Category {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

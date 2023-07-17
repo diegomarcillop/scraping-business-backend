@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { State } from '../enums/states.enum';
 import { Publication } from './publication.entity';
 
-@Entity('type_publication', { schema: 'search' })
+@Entity('type_publication')
 export class TypePublication {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

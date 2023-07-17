@@ -12,7 +12,7 @@ import { State } from '../enums/states.enum';
 import { Interest } from './interest.entity';
 import { Category } from './category.entity';
 
-@Entity('interest_category', { schema: 'user' })
+@Entity('interest_category')
 export class InterestCategory {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

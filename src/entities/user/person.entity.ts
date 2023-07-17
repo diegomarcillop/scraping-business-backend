@@ -8,7 +8,7 @@ import {
 
 import { User } from './user.entity';
 
-@Entity('person', { schema: 'user' })
+@Entity('person')
 export class Person {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;

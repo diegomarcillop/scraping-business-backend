@@ -8,7 +8,7 @@ import {
 
 import { State } from '../enums/states.enum';
 
-@Entity('business', { schema: 'business' })
+@Entity('business')
 export class Business {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
