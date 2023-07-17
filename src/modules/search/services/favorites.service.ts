@@ -26,7 +26,7 @@ export class FavoritesService {
     const user = await this.userRepository.findOne({
       select: ['id', 'state', 'email'],
       relations: ['person'],
-      where: { id: body.userId, state: 'active' },
+      where: { id: body.userId, state: State.Active },
     });
 
     if (!user)
@@ -95,7 +95,7 @@ export class FavoritesService {
   }
 
   async delete(id: number) {
-    const favorite = await this.favoriteRepository.findOne(id);
+    const favorite = await this.favoriteRepository.findOne({ where: { id } });
 
     if (!favorite)
       return {

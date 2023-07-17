@@ -54,7 +54,9 @@ export class TokenService {
 
   async validateToken(token: TokenJwt): Promise<any> {
     const { id } = token;
-    const user = await this.userRepository.findOne({ id, state: State.Active });
+    const user = await this.userRepository.findOne({
+      where: { id, state: State.Active },
+    });
 
     if (!user) {
       throw new UnauthorizedException('invalid or expire token');

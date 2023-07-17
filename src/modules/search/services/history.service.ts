@@ -20,7 +20,7 @@ export class HistoryService {
     const user = await this.userRepository.findOne({
       select: ['id', 'state', 'email'],
       relations: ['person'],
-      where: { id: body.userId, state: 'active' },
+      where: { id: body.userId, state: State.Active },
     });
 
     if (!user)

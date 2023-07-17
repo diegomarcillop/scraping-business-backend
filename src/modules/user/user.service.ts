@@ -8,6 +8,7 @@ import { Person } from 'src/entities/user/person.entity';
 import { UpdateBusiness } from './dto/updateBusiness.dto';
 import { Business } from 'src/entities/business/business.entity';
 import { BusinessUser } from 'src/entities/business/businessUser.entity';
+import { State } from 'src/entities/enums/states.enum';
 
 @Injectable()
 export class UserService {
@@ -82,7 +83,7 @@ export class UserService {
       const isUser = await this.userRepository.findOne({
         select: ['id', 'state', 'email'],
         relations: ['person'],
-        where: { email: body.email, state: 'active' },
+        where: { email: body.email, state: State.Active },
       });
 
       if (isUser)

@@ -50,7 +50,9 @@ export class RecoverPasswordService {
 
   async verifyCode(body: VerifyCodeDTO) {
     const { email, code } = body;
-    const user = await this.userRepository.findOne({ where: { email, code } });
+    const user = await this.userRepository.findOne({
+      where: { email, code: `${code}` },
+    });
 
     if (!user)
       return {
